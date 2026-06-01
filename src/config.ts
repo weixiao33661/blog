@@ -79,6 +79,18 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa6-brands:github",
 			url: "https://github.com/saicaca/fuwari",
 		},
+		{
+			name: "微信",
+			icon: "fa6-brands:weixin",
+			url: "/social/wechat.png",
+			qrCode: "/social/wechat.png",
+		},
+		{
+			name: "QQ",
+			icon: "fa6-brands:qq",
+			url: "/social/qq.png",
+			qrCode: "/social/qq.png",
+		},
 	],
 };
 

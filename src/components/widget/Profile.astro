@@ -6,7 +6,7 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
 
 const config = profileConfig;
 ---
-<div class="card-base p-3">
+<div class="card-base !overflow-visible p-3">
     <a aria-label="Go to About Page" href={url('/about/')}
        class="group block relative mx-auto mt-1 mb-3
        w-24 h-24 md:w-28 md:h-28 overflow-hidden rounded-full active:scale-95">
@@ -24,9 +24,17 @@ const config = profileConfig;
         <div class="text-center text-neutral-400 mb-2.5 transition">{config.bio}</div>
         <div class="flex flex-wrap gap-2 justify-center mb-1">
             {config.links.length > 1 && config.links.map(item =>
+                <div class="social-qr-trigger relative">
                     <a rel="me" aria-label={item.name} href={item.url} target="_blank" class="btn-regular rounded-lg h-10 w-10 active:scale-90">
                         <Icon name={item.icon} class="text-[1.5rem]"></Icon>
                     </a>
+                    {item.qrCode && (
+                        <div class="social-qr-panel absolute left-1/2 bottom-12 z-50 w-36 rounded-xl border border-black/10 bg-white p-2 shadow-xl pointer-events-none transition dark:border-white/10 dark:bg-neutral-900">
+                            <img src={url(item.qrCode)} alt={`${item.name} QR Code`} class="block h-32 w-32 rounded-lg object-cover" loading="lazy" />
+                            <div class="mt-1 text-center text-xs font-medium text-black/70 dark:text-white/70">{item.name}</div>
+                        </div>
+                    )}
+                </div>
             )}
             {config.links.length == 1 && <a rel="me" aria-label={config.links[0].name} href={config.links[0].url} target="_blank"
                                             class="btn-regular rounded-lg h-10 gap-2 px-3 font-bold active:scale-95">
@@ -36,4 +44,17 @@ const config = profileConfig;
         </div>
     </div>
 </div>
+
+<style>
+    .social-qr-panel {
+        opacity: 0;
+        transform: translate(-50%, 0.25rem);
+    }
+
+    .social-qr-trigger:hover .social-qr-panel,
+    .social-qr-trigger:focus-within .social-qr-panel {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+</style>
 

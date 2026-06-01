@@ -9,6 +9,7 @@
 - 顶部 3 图自动轮播 (5 秒切换 + 手动翻页)
 - 全站固定通缉令背景 + 双层渐变遮罩
 - 文章卡片半透明毛玻璃，正文配草帽红描边图框
+- 头像信息卡支持微信、QQ 二维码悬停预览
 - 友链页参考 bx33661 风格，分博客与组织两组
 - 暗黑模式默认开启 (海贼王素材色彩浓，深色更协调)
 
@@ -40,6 +41,21 @@ src/
 ├─ pages/
 │  └─ friends.astro      # 友链页
 └─ config.ts             # 站点全局配置
+public/
+└─ social/               # 微信、QQ 等公开二维码图片
+```
+
+## 个人信息与社交二维码
+
+头像下方的个人信息由 `src/config.ts` 中的 `profileConfig` 控制。普通外链只需要配置 `name`、`icon`、`url`；微信、QQ 这类二维码入口额外配置 `qrCode`，图片放在 `public/social/`：
+
+```ts
+{
+  name: "微信",
+  icon: "fa6-brands:weixin",
+  url: "/social/wechat.png",
+  qrCode: "/social/wechat.png",
+}
 ```
 
 ## 主题色变量
