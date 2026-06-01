@@ -11,6 +11,9 @@
     "astro": "astro",
     "type-check": "tsc --noEmit --isolatedDeclarations",
     "new-post": "node scripts/new-post.js",
+    "import-post": "node scripts/import-post.js",
+    "import-feishu-wp": "node scripts/import-feishu-wp.js",
+    "publish-post": "node scripts/publish-post.js",
     "format": "biome format --write ./src",
     "lint": "biome check --write ./src",
     "preinstall": "npx only-allow pnpm"
