@@ -21,7 +21,7 @@ run("git", ["status", "--short"], { capture: true });
 
 if (!flags.has("skip-build")) {
 	console.log("\n==> pnpm build");
-	run("pnpm", ["build"]);
+	runPackageManager(["build"]);
 }
 
 const status = run("git", ["status", "--short"], { capture: true }).trim();
@@ -40,6 +40,11 @@ console.log("\n==> git push");
 run("git", ["push"]);
 
 console.log("\n发布完成。Cloudflare Pages 会自动部署,通常 1~2 分钟生效。");
+
+function runPackageManager(args) {
+	const cmd = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+	return run(cmd, args);
+}
 
 function run(cmd, args, options = {}) {
 	try {

@@ -33,7 +33,9 @@ let markdown = readText(mdPath);
 
 const fallbackTitle = path.basename(mdPath, path.extname(mdPath));
 const title = String(flags.get("title") || inferTitle(markdown, fallbackTitle));
-const slug = String(flags.get("slug") || slugify(title));
+const slugFlag = flags.get("slug");
+if (slugFlag === true) throw new Error("--slug 后面必须跟路径名,例如: --slug yuwangbei");
+const slug = String(slugFlag || slugify(title));
 const postDir = path.join(POSTS_DIR, slug);
 
 assertSafeOutputDir(postDir, force);
