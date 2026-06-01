@@ -35,6 +35,7 @@
 
 - **2026-06-01** — 启航 ⚓ 站点搭建完成 (Astro + Fuwari)，定下海贼王主题，3 图轮播 + 通缉令背景
 - **2026-06-01** — 新增 [友链页](/friends/)，分博客与组织两组
+- **2026-06-01** — 部署到 Cloudflare Pages，正式上线 [blog-5w0.pages.dev](https://blog-5w0.pages.dev/)
 - _未来更新会陆续记录在这里…_
 
 ::github{repo="saicaca/fuwari"}
