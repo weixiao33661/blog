@@ -13,6 +13,7 @@
     "new-post": "node scripts/new-post.js",
     "import-post": "node scripts/import-post.js",
     "import-feishu-wp": "node scripts/import-feishu-wp.js",
+    "import-pdf-post": "node scripts/import-pdf-post.js",
     "publish-post": "node scripts/publish-post.js",
     "format": "biome format --write ./src",
     "lint": "biome check --write ./src",
