@@ -1,0 +1,142 @@
+---
+import { Image } from "astro:assets";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { friends, orgs, type Friend } from "../data/friends";
+
+const APPLY_MAIL = "weixiao33661@gmail.com";
+
+const renderCard = (f: Friend) => f;
+---
+
+<MainGridLayout title="友链" description="海上的旅人总会遇见同行的船">
+	<div class="card-base px-6 md:px-9 py-6 mb-4">
+		<div class="flex items-baseline justify-between flex-wrap gap-3">
+			<div>
+				<h1 class="text-2xl font-bold text-90">友链</h1>
+				<p class="text-sm text-50 mt-1">海上的旅人总会遇见同行的船 · 共 {friends.length} 位</p>
+			</div>
+			<a href={`mailto:${APPLY_MAIL}?subject=申请友链`} class="btn-regular px-4 h-9 rounded-md text-sm">
+				申请友链
+			</a>
+		</div>
+	</div>
+
+	<div class="card-base px-6 md:px-9 py-6 mb-4">
+		<h2 class="text-lg font-bold text-90 mb-4 flex items-center gap-2">
+			<span class="op-section-bar"></span>
+			博客 · {friends.length}
+		</h2>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+			{friends.map((f) => (
+				<a href={f.url} target="_blank" rel="noopener nofollow" class="friend-card group">
+					<Image src={f.avatar} alt={f.name} width={96} height={96} class="friend-avatar" loading="lazy" />
+					<div class="min-w-0 flex-1">
+						<div class="friend-name">{f.name}</div>
+						{f.bio && <div class="friend-bio">{f.bio}</div>}
+						<div class="friend-url">{new URL(f.url).host}</div>
+					</div>
+				</a>
+			))}
+		</div>
+	</div>
+
+	<div class="card-base px-6 md:px-9 py-6 mb-4">
+		<h2 class="text-lg font-bold text-90 mb-4 flex items-center gap-2">
+			<span class="op-section-bar"></span>
+			组织 · {orgs.length}
+		</h2>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+			{orgs.map((f) => (
+				<a href={f.url} target="_blank" rel="noopener nofollow" class="friend-card group">
+					<Image src={f.avatar} alt={f.name} width={96} height={96} class="friend-avatar" loading="lazy" />
+					<div class="min-w-0 flex-1">
+						<div class="friend-name">{f.name}</div>
+						{f.bio && <div class="friend-bio">{f.bio}</div>}
+						<div class="friend-url">{new URL(f.url).host}</div>
+					</div>
+				</a>
+			))}
+		</div>
+	</div>
+
+	<div class="card-base px-6 md:px-9 py-6 mb-4">
+		<h2 class="text-lg font-bold text-90 mb-3 flex items-center gap-2">
+			<span class="op-section-bar"></span>
+			申请友链
+		</h2>
+		<div class="text-sm text-75 leading-relaxed space-y-1">
+			<p>欢迎留下你的航行坐标，发邮件到 <a class="link-underline" href={`mailto:${APPLY_MAIL}`}>{APPLY_MAIL}</a>，附上：</p>
+			<ul class="list-disc list-inside ml-2 mt-2 space-y-0.5">
+				<li>站点名称</li>
+				<li>站点地址</li>
+				<li>一句话简介</li>
+				<li>头像图片地址 (可选,不提供我会从你站抓 favicon)</li>
+			</ul>
+		</div>
+	</div>
+</MainGridLayout>
+
+<style>
+	.op-section-bar {
+		display: inline-block;
+		width: 4px;
+		height: 18px;
+		background: var(--op-accent, #d9342b);
+		border-radius: 2px;
+	}
+	.friend-card {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 14px;
+		border-radius: 12px;
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+		text-decoration: none;
+		color: inherit;
+	}
+	html:not(.dark) .friend-card {
+		background: rgba(0, 0, 0, 0.03);
+		border-color: rgba(0, 0, 0, 0.06);
+	}
+	.friend-card:hover {
+		transform: translateY(-2px);
+		background: rgba(217, 52, 43, 0.08);
+		border-color: rgba(217, 52, 43, 0.45);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+	}
+	.friend-avatar {
+		width: 56px;
+		height: 56px;
+		border-radius: 9999px;
+		object-fit: cover;
+		flex-shrink: 0;
+		border: 2px solid rgba(217, 52, 43, 0.4);
+	}
+	.friend-name {
+		font-weight: 700;
+		font-size: 0.95rem;
+		color: var(--op-text-dark, #f4ecd8);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	html:not(.dark) .friend-name { color: var(--op-text-light, #1a1410); }
+	.friend-bio {
+		font-size: 0.8rem;
+		opacity: 0.7;
+		margin-top: 2px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.friend-url {
+		font-size: 0.7rem;
+		opacity: 0.5;
+		margin-top: 2px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+</style>

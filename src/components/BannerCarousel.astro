@@ -1,0 +1,134 @@
+---
+import { Image } from "astro:assets";
+import banner1 from "../assets/onepiece/banner-1.jpg";
+import banner2 from "../assets/onepiece/banner-2.jpg";
+import banner3 from "../assets/onepiece/banner-3.jpg";
+
+interface Props {
+	id?: string;
+	class?: string;
+}
+
+const { id, class: className } = Astro.props;
+const slides = [banner1, banner2, banner3];
+---
+
+<div id={id} class:list={[className, "banner-carousel relative overflow-hidden"]}>
+	<div class="banner-carousel-track absolute inset-0">
+		{slides.map((img, i) => (
+			<div class="banner-slide absolute inset-0 transition-opacity duration-700" data-index={i} data-active={i === 0 ? "true" : "false"}>
+				<Image src={img} alt={`Banner ${i + 1}`} class="w-full h-full object-cover" loading={i === 0 ? "eager" : "lazy"} />
+			</div>
+		))}
+	</div>
+
+	<div class="banner-overlay absolute inset-0 pointer-events-none"></div>
+
+	<button class="banner-arrow banner-arrow-prev" aria-label="Previous slide">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+	</button>
+	<button class="banner-arrow banner-arrow-next" aria-label="Next slide">
+		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+	</button>
+
+	<div class="banner-dots absolute left-1/2 -translate-x-1/2 bottom-4 flex gap-2 z-20">
+		{slides.map((_, i) => (
+			<button class="banner-dot" data-index={i} data-active={i === 0 ? "true" : "false"} aria-label={`Go to slide ${i + 1}`}></button>
+		))}
+	</div>
+</div>
+
+<style>
+	.banner-slide {
+		opacity: 0;
+	}
+	.banner-slide[data-active="true"] {
+		opacity: 1;
+	}
+	.banner-overlay {
+		background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.55) 100%);
+		z-index: 10;
+	}
+	.banner-arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: rgba(255,255,255,0.85);
+		background: rgba(0,0,0,0.25);
+		backdrop-filter: blur(6px);
+		border: 1px solid rgba(255,255,255,0.18);
+		border-radius: 9999px;
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 0.3s, background 0.2s, transform 0.2s;
+		z-index: 20;
+	}
+	.banner-arrow:hover {
+		background: rgba(0,0,0,0.45);
+	}
+	.banner-arrow-prev { left: 16px; }
+	.banner-arrow-next { right: 16px; }
+	.banner-carousel:hover .banner-arrow { opacity: 1; }
+	.banner-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 9999px;
+		background: rgba(255,255,255,0.4);
+		border: none;
+		cursor: pointer;
+		transition: width 0.3s, background 0.3s;
+	}
+	.banner-dot[data-active="true"] {
+		width: 24px;
+		background: rgba(255,255,255,0.95);
+	}
+</style>
+
+<script>
+	function initBannerCarousel() {
+		const root = document.querySelector<HTMLElement>(".banner-carousel");
+		if (!root || root.dataset.inited === "true") return;
+		root.dataset.inited = "true";
+
+		const slides = Array.from(root.querySelectorAll<HTMLElement>(".banner-slide"));
+		const dots = Array.from(root.querySelectorAll<HTMLElement>(".banner-dot"));
+		const prev = root.querySelector<HTMLElement>(".banner-arrow-prev");
+		const next = root.querySelector<HTMLElement>(".banner-arrow-next");
+		if (slides.length === 0) return;
+
+		let current = 0;
+		let timer: ReturnType<typeof setInterval> | null = null;
+		const INTERVAL = 5000;
+
+		function go(idx: number) {
+			current = (idx + slides.length) % slides.length;
+			slides.forEach((s, i) => s.setAttribute("data-active", i === current ? "true" : "false"));
+			dots.forEach((d, i) => d.setAttribute("data-active", i === current ? "true" : "false"));
+		}
+		function start() {
+			stop();
+			timer = setInterval(() => go(current + 1), INTERVAL);
+		}
+		function stop() {
+			if (timer) { clearInterval(timer); timer = null; }
+		}
+
+		prev?.addEventListener("click", () => { go(current - 1); start(); });
+		next?.addEventListener("click", () => { go(current + 1); start(); });
+		dots.forEach((d, i) => d.addEventListener("click", () => { go(i); start(); }));
+		root.addEventListener("mouseenter", stop);
+		root.addEventListener("mouseleave", start);
+
+		start();
+	}
+
+	initBannerCarousel();
+	document.addEventListener("swup:enable", () => {
+		(window as any).swup?.hooks?.on?.("page:view", initBannerCarousel);
+	});
+</script>
