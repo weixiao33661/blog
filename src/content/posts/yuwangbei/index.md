@@ -2,7 +2,7 @@
 title: "御网杯 WriteUp"
 published: 2026-06-01
 description: "御网杯 WriteUp CTF WriteUp"
-image: ''
+image: '../../../assets/covers/cover-02.jpg'
 tags: [CTF, WriteUp, Web]
 category: "WriteUp"
 draft: false

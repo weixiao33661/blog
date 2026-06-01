@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 
 export const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 export const POSTS_DIR = path.join(ROOT, "src", "content", "posts");
+export const COVERS_DIR = path.join(ROOT, "src", "assets", "covers");
+export const DEFAULT_COVER = "../../../assets/covers/default-cover.jpg";
 
 export function ensureDir(dir) {
 	fs.mkdirSync(dir, { recursive: true });
@@ -97,6 +99,38 @@ export function replaceFeishuImages(markdown, count) {
 		throw new Error(`图片数量不一致: Markdown 中有 ${i} 个图片占位,但 PDF 提取到 ${count} 张图`);
 	}
 	return { markdown: out, count: i };
+}
+
+export function inferFirstMarkdownImage(markdown) {
+	const match = markdown.match(/!\[[^\]\n]*\]\(([^)\n]+)\)/);
+	return match ? match[1].trim() : "";
+}
+
+export function resolveCoverImage(flags, slug, markdown = "", fallback = DEFAULT_COVER) {
+	const coverFlag = flags.get("cover");
+	if (coverFlag === true) throw new Error("--cover 后面必须跟图片路径,例如: --cover C:\\path\\cover.jpg");
+	if (typeof coverFlag === "string" && coverFlag.trim()) {
+		return normalizeCoverInput(coverFlag.trim(), slug);
+	}
+	return inferFirstMarkdownImage(markdown) || fallback;
+}
+
+export function normalizeCoverInput(cover, slug) {
+	if (/^(https?:)?\/\//.test(cover) || cover.startsWith("/") || cover.startsWith("./") || cover.startsWith("../")) {
+		return cover;
+	}
+	const source = path.resolve(cover);
+	if (!pathExists(source)) throw new Error(`封面图片不存在: ${source}`);
+	return copyCoverToAssets(source, slug);
+}
+
+export function copyCoverToAssets(source, slug) {
+	ensureDir(COVERS_DIR);
+	const ext = path.extname(source) || ".jpg";
+	const destName = `${slug}-cover${ext.toLowerCase()}`;
+	const dest = path.join(COVERS_DIR, destName);
+	fs.copyFileSync(source, dest);
+	return `../../../assets/covers/${destName}`;
 }
 
 export function normalizeCodeFences(markdown) {

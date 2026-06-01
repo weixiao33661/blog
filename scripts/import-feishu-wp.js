@@ -5,12 +5,14 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import {
 	POSTS_DIR,
+	DEFAULT_COVER,
 	assertSafeOutputDir,
 	cleanFeishuMarkdown,
 	inferTitle,
 	parseArgs,
 	prependFrontmatter,
 	readText,
+	resolveCoverImage,
 	replaceFeishuImages,
 	slugify,
 	stripLeadingH1,
@@ -49,10 +51,12 @@ const imageCount = extractPdfImages(pdfPath, imagesDir);
 const replaced = replaceFeishuImages(markdown, imageCount);
 markdown = replaced.markdown;
 markdown = cleanFeishuMarkdown(markdown);
+const coverImage = resolveCoverImage(flags, slug, markdown, replaced.count > 0 ? "./images/img-01.png" : DEFAULT_COVER);
 markdown = stripLeadingH1(markdown, title);
 markdown = prependFrontmatter(markdown, {
 	title,
 	description: String(flags.get("description") || `${title} CTF WriteUp`),
+	image: coverImage,
 	tags: String(flags.get("tags") || "CTF,WriteUp").split(",").map((s) => s.trim()).filter(Boolean),
 	category: String(flags.get("category") || "WriteUp"),
 });
@@ -65,6 +69,7 @@ writeText(path.join(postDir, "index.md"), markdown);
 console.log(`导入完成: ${path.relative(process.cwd(), postDir)}`);
 console.log(`标题: ${title}`);
 console.log(`Slug: ${slug}`);
+console.log(`封面: ${coverImage}`);
 console.log(`图片: PDF 提取 ${imageCount} 张,Markdown 替换 ${replaced.count} 处`);
 console.log(`预览地址: http://localhost:4321/posts/${slug}/`);
 

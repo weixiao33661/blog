@@ -9,6 +9,7 @@ import {
 	parseArgs,
 	prependFrontmatter,
 	readText,
+	resolveCoverImage,
 	slugify,
 	stripLeadingH1,
 	writeText,
@@ -41,10 +42,12 @@ const postDir = path.join(POSTS_DIR, slug);
 assertSafeOutputDir(postDir, force);
 
 markdown = cleanFeishuMarkdown(markdown);
+const coverImage = resolveCoverImage(flags, slug, markdown);
 markdown = stripLeadingH1(markdown, title);
 markdown = prependFrontmatter(markdown, {
 	title,
 	description: String(flags.get("description") || ""),
+	image: coverImage,
 	tags: String(flags.get("tags") || "随笔").split(",").map((s) => s.trim()).filter(Boolean),
 	category: String(flags.get("category") || "随笔"),
 });
@@ -55,6 +58,7 @@ const copied = copySiblingAssets(mdPath, postDir);
 console.log(`导入完成: ${path.relative(process.cwd(), postDir)}`);
 console.log(`标题: ${title}`);
 console.log(`Slug: ${slug}`);
+console.log(`封面: ${coverImage}`);
 if (copied.length > 0) {
 	console.log("复制图片/资源目录:");
 	for (const item of copied) console.log(`- ${item.from} -> ${item.to}`);

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import { ROOT, POSTS_DIR, assertSafeOutputDir, ensureDir, parseArgs, prependFrontmatter, slugify, writeText } from "./post-utils.js";
+import { DEFAULT_COVER, ROOT, POSTS_DIR, assertSafeOutputDir, ensureDir, parseArgs, prependFrontmatter, resolveCoverImage, slugify, writeText } from "./post-utils.js";
 
 const { args, flags } = parseArgs(process.argv.slice(2));
 
@@ -36,11 +36,13 @@ const publicPdfPath = path.join(filesDir, pdfName);
 fs.copyFileSync(pdfPath, publicPdfPath);
 
 const publicUrl = `/files/${pdfName}`;
+const coverImage = resolveCoverImage(flags, slug, "", DEFAULT_COVER);
 const markdownBody = `# ${title}\n\n> 如果页面内嵌预览加载较慢，可以直接下载 PDF 阅读。\n\n[下载 PDF](${publicUrl})\n\n<iframe src="${publicUrl}" width="100%" height="850px" style="border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; background: #111;"></iframe>\n`;
 
 const markdown = prependFrontmatter(markdownBody, {
 	title,
 	description: String(flags.get("description") || `${title} PDF 归档`),
+	image: coverImage,
 	tags: String(flags.get("tags") || "PDF").split(",").map((s) => s.trim()).filter(Boolean),
 	category: String(flags.get("category") || "归档"),
 });
@@ -51,4 +53,5 @@ console.log(`导入完成: ${path.relative(process.cwd(), postDir)}`);
 console.log(`PDF: ${path.relative(process.cwd(), publicPdfPath)}`);
 console.log(`标题: ${title}`);
 console.log(`Slug: ${slug}`);
+console.log(`封面: ${coverImage}`);
 console.log(`预览地址: http://localhost:4321/posts/${slug}/`);
