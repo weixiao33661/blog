@@ -78,14 +78,23 @@ export function cleanFeishuMarkdown(markdown) {
 }
 
 export function replaceFeishuImages(markdown, count) {
-	const imgPattern = /!\[Image\]\(https:\/\/internal-api-drive-stream\.feishu\.cn[^)]+\)/g;
+	const feishuPattern = /!\[Image\]\(https:\/\/internal-api-drive-stream\.feishu\.cn[^)]+\)/g;
 	let i = 0;
-	const out = markdown.replace(imgPattern, () => {
+	let out = markdown.replace(feishuPattern, () => {
 		i += 1;
 		return `![Figure ${i}](./images/img-${String(i).padStart(2, "0")}.png)`;
 	});
+
+	if (i === 0) {
+		const genericImagePattern = /!\[[^\]\n]*\]\((?!\.\/images\/img-\d{2}\.png\))[^)\n]+\)/g;
+		out = markdown.replace(genericImagePattern, () => {
+			i += 1;
+			return `![Figure ${i}](./images/img-${String(i).padStart(2, "0")}.png)`;
+		});
+	}
+
 	if (typeof count === "number" && i !== count) {
-		throw new Error(`图片数量不一致: Markdown 中有 ${i} 个飞书图片占位,但 PDF 提取到 ${count} 张图`);
+		throw new Error(`图片数量不一致: Markdown 中有 ${i} 个图片占位,但 PDF 提取到 ${count} 张图`);
 	}
 	return { markdown: out, count: i };
 }
