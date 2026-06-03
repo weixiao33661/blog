@@ -2,6 +2,7 @@
 title: "MoeCTF 2025 re"
 published: 2025-07-05
 description: "MoeCTF 2025 Reverse WriteUp"
+image: '../../../assets/covers/moectf-2025-re-cover.jpg'
 tags: [WriteUp, Reverse]
 category: "WriteUp"
 draft: false
