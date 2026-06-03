@@ -60,7 +60,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/onepiece/avatar.png",
 	name: "weixiao",
-	bio: "我是要成为海贼王的男人",
+	bio: "",
 	links: [
 		{
 			name: "Twitter",
