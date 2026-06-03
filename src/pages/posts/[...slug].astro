@@ -1,18 +1,14 @@
 ---
-import path from "node:path";
+import type { MarkdownHeading } from "astro";
+import { Icon } from "astro-icon/components";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
-import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPosts } from "@utils/content-utils";
-import { getDir, getPostUrlBySlug } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
-import { licenseConfig } from "src/config";
-import ImageWrapper from "../../components/misc/ImageWrapper.astro";
 import PostMetadata from "../../components/PostMeta.astro";
-import { profileConfig, siteConfig } from "../../config";
+import LabLayout from "../../layouts/LabLayout.astro";
+import { licenseConfig, profileConfig, siteConfig } from "../../config";
 import { formatDateToYYYYMMDD } from "../../utils/date-utils";
+import { getSortedPosts } from "../../utils/content-utils";
+import { getPostUrlBySlug } from "../../utils/url-utils";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
@@ -24,9 +20,10 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
-const postCover = entry.data.image || "../../../assets/covers/default-cover.jpg";
-
 const { remarkPluginFrontmatter } = await entry.render();
+
+const tocHeadings = headings.filter((heading: MarkdownHeading) => heading.depth <= 3);
+const date = formatDateToYYYYMMDD(entry.data.published);
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -39,99 +36,288 @@ const jsonLd = {
 		name: profileConfig.name,
 		url: Astro.site,
 	},
-	datePublished: formatDateToYYYYMMDD(entry.data.published),
+	datePublished: date,
 	inLanguage: entry.data.lang
 		? entry.data.lang.replace("_", "-")
 		: siteConfig.lang.replace("_", "-"),
-	// TODO include cover image here
 };
 ---
-<MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} headings={headings}>
-    <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
-        <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
-            {}
-        ]}>
-            <!-- word count and reading time -->
-            <div class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:notes-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount)}</div>
-                </div>
-                <div class="flex flex-row items-center">
-                    <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
-                        <Icon name="material-symbols:schedule-outline-rounded"></Icon>
-                    </div>
-                    <div class="text-sm">
-                        {remarkPluginFrontmatter.minutes} {" " + i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}
-                    </div>
-                </div>
-            </div>
 
-            <!-- title -->
-            <div class="relative onload-animation">
-                <div
-                    data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
-                    class="transition w-full block font-bold mb-3
-                    text-3xl md:text-[2.25rem]/[2.75rem]
-                    text-black/90 dark:text-white/90
-                    md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:top-[0.75rem] before:left-[-1.125rem]
-                ">
-                    {entry.data.title}
-                </div>
-            </div>
+<LabLayout title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true}>
+	<script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+	<div class="lab-shell lab-post-shell">
+		<article class="lab-post-main">
+			<header class="lab-post-hero">
+				<a href="/archive/" class="lab-back-link">
+					<Icon name="material-symbols:arrow-back-rounded" />
+					<span>返回归档</span>
+				</a>
+				<div class="mt-5 flex flex-wrap items-center gap-2">
+					{entry.data.category && <span class="lab-post-chip">{entry.data.category}</span>}
+					{entry.data.tags.map((tag: string) => <span class="lab-post-chip muted">#{tag}</span>)}
+				</div>
+				<h1 data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title" class="mt-5 text-3xl font-bold leading-tight text-[var(--lab-fg)] sm:text-5xl">
+					{entry.data.title}
+				</h1>
+				{entry.data.description && (
+					<p class="mt-4 max-w-3xl text-base leading-relaxed text-[var(--lab-muted)] sm:text-lg">
+						{entry.data.description}
+					</p>
+				)}
+				<div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-[var(--lab-muted)]">
+					<span class="lab-inline-meta">
+						<Icon name="material-symbols:calendar-month-outline-rounded" />
+						{date}
+					</span>
+					<span class="lab-inline-meta">
+						<Icon name="material-symbols:notes-rounded" />
+						{remarkPluginFrontmatter.words} words
+					</span>
+					<span class="lab-inline-meta">
+						<Icon name="material-symbols:schedule-outline-rounded" />
+						{remarkPluginFrontmatter.minutes} min read
+					</span>
+				</div>
+				<div class="mt-5">
+					<PostMetadata
+						class="lab-post-meta"
+						published={entry.data.published}
+						updated={entry.data.updated}
+						tags={entry.data.tags}
+						category={entry.data.category}
+					/>
+				</div>
+			</header>
 
-            <!-- metadata -->
-            <div class="onload-animation">
-                <PostMetadata
-                        class="mb-5"
-                        published={entry.data.published}
-                        updated={entry.data.updated}
-                        tags={entry.data.tags}
-                        category={entry.data.category}
-                ></PostMetadata>
-                {!entry.data.image && <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mb-5"></div>}
-            </div>
+			<div class="lab-post-content-card">
+				<Markdown class="lab-markdown">
+					<Content />
+				</Markdown>
+			</div>
 
-            <!-- always show cover as long as it has one -->
+			{licenseConfig.enable && (
+				<License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="lab-license" />
+			)}
 
-            {postCover &&
-                <ImageWrapper id="post-cover" src={postCover} basePath={path.join("content/posts/", getDir(entry.id))} class="mb-8 rounded-xl banner-container onload-animation"/>
-            }
+			<nav class="lab-post-nav" aria-label="Post navigation">
+				<a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"} class:list={["lab-post-nav-link", { "is-disabled": !entry.data.nextSlug }]}>
+					<Icon name="material-symbols:chevron-left-rounded" />
+					<span>{entry.data.nextTitle}</span>
+				</a>
+				<a href={entry.data.prevSlug ? getPostUrlBySlug(entry.data.prevSlug) : "#"} class:list={["lab-post-nav-link align-right", { "is-disabled": !entry.data.prevSlug }]}>
+					<span>{entry.data.prevTitle}</span>
+					<Icon name="material-symbols:chevron-right-rounded" />
+				</a>
+			</nav>
+		</article>
 
+		{tocHeadings.length > 0 && (
+			<aside class="lab-post-toc" aria-label="文章目录">
+				<div class="lab-post-toc-inner">
+					<div class="font-mono text-xs font-bold uppercase tracking-[0.22em] text-[var(--lab-accent)]">contents</div>
+					<nav class="mt-3 grid gap-1">
+						{tocHeadings.map((heading: MarkdownHeading) => (
+							<a href={`#${heading.slug}`} class:list={["lab-toc-link", `depth-${heading.depth}`]}>
+								{heading.text.replace(/#$/, "")}
+							</a>
+						))}
+					</nav>
+				</div>
+			</aside>
+		)}
+	</div>
+</LabLayout>
 
-            <Markdown class="mb-6 markdown-content onload-animation">
-                <Content />
-            </Markdown>
-
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
-
-        </div>
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-between mb-4 gap-4 overflow-hidden w-full">
-        <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.nextSlug}]}>
-            {entry.data.nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-start gap-4" >
-                <Icon name="material-symbols:chevron-left-rounded" class="text-[2rem] text-[var(--primary)]" />
-                <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
-                    {entry.data.nextTitle}
-                </div>
-            </div>}
-        </a>
-
-        <a href={entry.data.prevSlug ? getPostUrlBySlug(entry.data.prevSlug) : "#"}
-           class:list={["w-full font-bold overflow-hidden active:scale-95", {"pointer-events-none": !entry.data.prevSlug}]}>
-            {entry.data.prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-end gap-4">
-                <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
-                    {entry.data.prevTitle}
-                </div>
-                <Icon name="material-symbols:chevron-right-rounded" class="text-[2rem] text-[var(--primary)]" />
-            </div>}
-        </a>
-    </div>
-
-</MainGridLayout>
+<style>
+	.lab-post-shell {
+		display: grid;
+		gap: 2rem;
+		padding-bottom: 4rem;
+		padding-top: 2.5rem;
+	}
+	@media (min-width: 1180px) {
+		.lab-post-shell {
+			grid-template-columns: minmax(0, 1fr) 15rem;
+			max-width: 72rem;
+		}
+	}
+	.lab-post-main {
+		min-width: 0;
+	}
+	.lab-post-hero,
+	.lab-post-content-card,
+	.lab-license,
+	.lab-post-nav-link,
+	.lab-post-toc-inner {
+		background: color-mix(in srgb, var(--lab-card) 78%, transparent);
+		border: 1px solid var(--lab-border);
+		box-shadow: 0 20px 70px rgba(2, 6, 23, 0.08);
+	}
+	.lab-post-hero,
+	.lab-post-content-card,
+	.lab-license,
+	.lab-post-toc-inner {
+		border-radius: 1rem;
+	}
+	.lab-post-hero {
+		padding: 1.25rem;
+	}
+	@media (min-width: 640px) {
+		.lab-post-hero {
+			padding: 2rem;
+		}
+	}
+	.lab-back-link,
+	.lab-inline-meta,
+	.lab-post-chip {
+		align-items: center;
+		display: inline-flex;
+	}
+	.lab-back-link {
+		color: var(--lab-muted);
+		font-size: 0.9rem;
+		font-weight: 650;
+		gap: 0.4rem;
+		transition: color 0.2s;
+	}
+	.lab-back-link:hover {
+		color: var(--lab-accent);
+	}
+	.lab-post-chip {
+		border: 1px solid color-mix(in srgb, var(--lab-accent) 26%, transparent);
+		border-radius: 999px;
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.72rem;
+		font-weight: 750;
+		padding: 0.2rem 0.5rem;
+	}
+	.lab-post-chip.muted {
+		border-color: var(--lab-border);
+		color: var(--lab-muted);
+	}
+	.lab-inline-meta {
+		gap: 0.35rem;
+	}
+	.lab-inline-meta :global(svg) {
+		font-size: 1.1rem;
+	}
+	.lab-post-meta :global(.meta-icon) {
+		background: color-mix(in srgb, var(--lab-accent) 10%, transparent);
+		color: var(--lab-accent);
+	}
+	.lab-post-meta :global(a:hover) {
+		color: var(--lab-accent);
+	}
+	.lab-post-content-card {
+		margin-top: 1rem;
+		padding: 1.25rem;
+	}
+	@media (min-width: 640px) {
+		.lab-post-content-card {
+			padding: 2rem;
+		}
+	}
+	.lab-markdown {
+		color: var(--lab-fg);
+	}
+	.lab-markdown :global(h1),
+	.lab-markdown :global(h2),
+	.lab-markdown :global(h3),
+	.lab-markdown :global(h4),
+	.lab-markdown :global(h5),
+	.lab-markdown :global(h6) {
+		color: var(--lab-fg);
+		letter-spacing: 0;
+		scroll-margin-top: 6rem;
+	}
+	.lab-markdown :global(p),
+	.lab-markdown :global(li) {
+		color: color-mix(in srgb, var(--lab-fg) 84%, transparent);
+	}
+	.lab-markdown :global(a:not(.no-styling)) {
+		color: var(--lab-accent);
+	}
+	.lab-markdown :global(blockquote) {
+		border-left-color: var(--lab-accent);
+		color: var(--lab-muted);
+	}
+	.lab-markdown :global(pre),
+	.lab-markdown :global(.expressive-code) {
+		border-radius: 0.8rem;
+	}
+	.lab-license {
+		margin-top: 1rem;
+	}
+	.lab-post-nav {
+		display: grid;
+		gap: 0.75rem;
+		margin-top: 1rem;
+	}
+	@media (min-width: 640px) {
+		.lab-post-nav {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	.lab-post-nav-link {
+		align-items: center;
+		border-radius: 0.9rem;
+		color: var(--lab-fg);
+		display: flex;
+		font-weight: 700;
+		gap: 0.65rem;
+		min-height: 3.75rem;
+		min-width: 0;
+		padding: 0.8rem 1rem;
+		transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+	}
+	.lab-post-nav-link span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.lab-post-nav-link:hover {
+		background: color-mix(in srgb, var(--lab-accent) 8%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 30%, transparent);
+		color: var(--lab-accent);
+		transform: translateY(-1px);
+	}
+	.lab-post-nav-link.is-disabled {
+		opacity: 0.36;
+		pointer-events: none;
+	}
+	.lab-post-nav-link.align-right {
+		justify-content: flex-end;
+	}
+	.lab-post-toc {
+		display: none;
+	}
+	@media (min-width: 1180px) {
+		.lab-post-toc {
+			display: block;
+		}
+	}
+	.lab-post-toc-inner {
+		padding: 1rem;
+		position: sticky;
+		top: 5.8rem;
+	}
+	.lab-toc-link {
+		border-radius: 0.65rem;
+		color: var(--lab-muted);
+		display: block;
+		font-size: 0.86rem;
+		line-height: 1.35;
+		overflow: hidden;
+		padding: 0.42rem 0.55rem;
+		text-overflow: ellipsis;
+		transition: color 0.2s, background 0.2s;
+	}
+	.lab-toc-link:hover {
+		background: color-mix(in srgb, var(--lab-accent) 8%, transparent);
+		color: var(--lab-accent);
+	}
+	.lab-toc-link.depth-3 {
+		padding-left: 1.2rem;
+	}
+</style>

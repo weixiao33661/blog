@@ -22,7 +22,7 @@ export interface Friend {
 export const friends: Friend[] = [
 	{ name: "Bx", url: "https://www.bx33661.com/", avatar: bx, bio: "BX 的安全研究小屋" },
 	{ name: "orxiain", url: "https://orxiain.life/", avatar: orxiain, bio: "ORXIAIN. - ISLAND" },
-	{ name: "Jatopos", url: "https://jatopos.github.io/", avatar: jatopos, bio: "Jatopos 的航海日志" },
+	{ name: "Jatopos", url: "https://jatopos.github.io/", avatar: jatopos, bio: "Jatopos 的技术记录" },
 	{ name: "Berial", url: "https://berial.cn/", avatar: berial, bio: "Berial's Blog" },
 	{ name: "Ewoji", url: "https://ewoji.cn/", avatar: ewoji, bio: "Ewoji 的小破站" },
 	{ name: "iam0range", url: "https://iam0range.github.io/", avatar: iam0range, bio: "iam0range 的笔记本" },

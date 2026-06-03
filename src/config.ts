@@ -8,16 +8,16 @@ import type {
 import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
-	title: "ONE PIECE 航海日志",
-	subtitle: "向着伟大航路出发",
+	title: "weixiao Security Lab",
+	subtitle: "Android Reverse / CTF WriteUp / Security Notes",
 	lang: "zh_CN",
 	themeColor: {
-		hue: 8,
+		hue: 185,
 		fixed: false,
 	},
 	banner: {
 		enable: true,
-		src: "assets/onepiece/banner-1.jpg",
+		src: "assets/top-banners/banner-01.jpg",
 		position: "center",
 		credit: {
 			enable: false,
@@ -51,33 +51,21 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.About,
 		{
 			name: "GitHub",
-			url: "https://github.com/saicaca/fuwari", // Internal links should not include the base path, as it is automatically added
+			url: "https://github.com/", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
 		},
 	],
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/onepiece/avatar.png",
+	avatar: "assets/images/avatar.png",
 	name: "weixiao",
-	bio: "",
+	bio: "Android 安全 / 逆向分析 / CTF WriteUp",
 	links: [
-		{
-			name: "Twitter",
-			icon: "fa6-brands:twitter", // Visit https://icones.js.org/ for icon codes
-			// You will need to install the corresponding icon set if it's not already included
-			// `pnpm add @iconify-json/<icon-set-name>`
-			url: "https://twitter.com",
-		},
-		{
-			name: "Steam",
-			icon: "fa6-brands:steam",
-			url: "https://store.steampowered.com",
-		},
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
-			url: "https://github.com/saicaca/fuwari",
+			url: "https://github.com/",
 		},
 		{
 			name: "微信",

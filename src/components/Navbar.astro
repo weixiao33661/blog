@@ -24,11 +24,16 @@ let links: NavBarLink[] = navBarConfig.links.map(
     <div class="absolute h-8 left-0 right-0 -top-8 bg-[var(--card-bg)] transition"></div> <!-- used for onload animation -->
     <div class:list={[
         className,
-        "card-base !overflow-visible max-w-[var(--page-width)] h-[4.5rem] !rounded-t-none mx-auto flex items-center justify-between px-4"]}>
-        <a href={url('/')} class="btn-plain scale-animation rounded-lg h-[3.25rem] px-5 font-bold active:scale-95">
+        "card-base security-navbar !overflow-visible max-w-[var(--page-width)] h-[4.5rem] !rounded-t-none mx-auto flex items-center justify-between px-4"]}>
+        <a href={url('/')} class="btn-plain scale-animation rounded-lg h-[3.25rem] px-3 md:px-5 font-bold active:scale-95">
             <div class="flex flex-row text-[var(--primary)] items-center text-md">
-                <Icon name="material-symbols:home-outline-rounded" class="text-[1.75rem] mb-1 mr-2" />
-                {siteConfig.title}
+                <span class="security-brand-mark mr-3" aria-hidden="true">
+                    <Icon name="material-symbols:shield-lock-outline-rounded" class="text-[1.5rem]" />
+                </span>
+                <div class="leading-tight">
+                    <div class="text-[0.95rem] md:text-base">{siteConfig.title}</div>
+                    <div class="hidden md:block text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-black/40 dark:text-white/40">Security Notes</div>
+                </div>
             </div>
         </a>
         <div class="hidden md:flex">
@@ -60,6 +65,23 @@ let links: NavBarLink[] = navBarConfig.links.map(
         <DisplaySettings client:only="svelte"></DisplaySettings>
     </div>
 </div>
+
+<style>
+    .security-navbar {
+        border-top: 0 !important;
+        box-shadow: 0 18px 50px rgba(2, 6, 23, 0.22);
+    }
+    .security-brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.65rem;
+        background: linear-gradient(135deg, rgba(45, 212, 191, 0.18), rgba(59, 130, 246, 0.14));
+        border: 1px solid rgba(45, 212, 191, 0.26);
+    }
+</style>
 
 <script>
 function loadButtonScript() {

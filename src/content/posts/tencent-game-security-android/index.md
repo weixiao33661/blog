@@ -2,6 +2,7 @@
 title: "腾讯游戏安全大赛-安卓端"
 published: 2026-05-24
 description: "腾讯游戏安全大赛安卓端复现记录"
+image: '../../../assets/covers/pro/tencent-game-security-android.jpg'
 tags: [android, 复现]
 category: "Android"
 draft: false

@@ -2,7 +2,7 @@
 title: LitCTF 2026 Hnusec1 战队 wp
 published: 2026-06-01
 description: LitCTF 2026 Web / Pwn / Reverse / Crypto / Misc 部分题解,队伍 Hnusec1 排名第 8。
-image: '../../../assets/covers/cover-01.jpg'
+image: '../../../assets/covers/pro/litctf-2026.jpg'
 tags: [CTF, WriteUp, Web, Pwn, Reverse, Crypto, Misc]
 category: WriteUp
 draft: false

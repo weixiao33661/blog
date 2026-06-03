@@ -9,6 +9,11 @@ let delay = 0;
 const interval = 50;
 ---
 <div class="transition flex flex-col rounded-[var(--radius-large)] bg-[var(--card-bg)] py-1 md:py-0 md:bg-transparent md:gap-4 mb-4">
+    <div class="hidden md:block card-base px-6 py-5">
+        <div class="security-kicker mb-2">Latest Research Notes</div>
+        <div class="text-2xl font-bold text-90">网络安全学习记录</div>
+        <div class="mt-2 text-sm text-50 leading-6">Android 逆向、CTF 复现、工具链排错与安全研究笔记。</div>
+    </div>
     {page.data.map((entry: CollectionEntry<"posts">) => (
         <PostCard
                 entry={entry}

@@ -2,6 +2,7 @@
 title: "绕过root与重定向app流量"
 published: 2026-06-03
 description: "Android root 检测绕过与 App 流量重定向记录"
+image: '../../../assets/covers/pro/bypass-root-redirect-app-traffic.jpg'
 tags: [android]
 category: "Android"
 draft: false

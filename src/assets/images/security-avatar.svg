@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Security avatar</title>
+  <desc id="desc">A minimal cyber security shield mark for the blog profile.</desc>
+  <defs>
+    <linearGradient id="shield" x1="64" y1="24" x2="206" y2="224" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5eead4"/>
+      <stop offset="0.48" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="58%">
+      <stop offset="0" stop-color="#2dd4bf" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="#020617"/>
+  <rect x="16" y="16" width="224" height="224" rx="40" fill="url(#glow)"/>
+  <path d="M128 31 201 58v54c0 51-30 90-73 113-43-23-73-62-73-113V58l73-27Z" fill="#07111f" stroke="url(#shield)" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M83 123h90" stroke="#5eead4" stroke-width="8" stroke-linecap="round"/>
+  <path d="M103 92h50c12 0 22 10 22 22v44c0 12-10 22-22 22h-50c-12 0-22-10-22-22v-44c0-12 10-22 22-22Z" fill="#0f172a" stroke="#22d3ee" stroke-width="7"/>
+  <path d="M105 92V77c0-13 10-24 23-24s23 11 23 24v15" fill="none" stroke="#a5f3fc" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="128" cy="137" r="11" fill="#5eead4"/>
+  <path d="M128 148v17" stroke="#5eead4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M38 75h23M195 75h23M39 181h21M196 181h21M42 128h17M197 128h17" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+</svg>

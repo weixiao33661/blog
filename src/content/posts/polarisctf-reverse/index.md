@@ -2,7 +2,7 @@
 title: "Polarisctf Reverse"
 published: 2026-03-31
 description: "Polarisctf Reverse CTF WriteUp"
-image: '../../../assets/covers/cover-04.jpg'
+image: '../../../assets/covers/pro/polarisctf-reverse.jpg'
 tags: [CTF, WriteUp, Reverse]
 category: "WriteUp"
 draft: false

@@ -1,14 +1,243 @@
 ---
-import ArchivePanel from "@components/ArchivePanel.svelte";
-import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
-import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPostsList } from "../utils/content-utils";
+import { Icon } from "astro-icon/components";
+import LabLayout from "../layouts/LabLayout.astro";
+import { getCategoryList, getSortedPostsList, getTagList } from "../utils/content-utils";
+import { formatDateToYYYYMMDD } from "../utils/date-utils";
+import { getPostUrlBySlug, getTagUrl } from "../utils/url-utils";
 
-const sortedPostsList = await getSortedPostsList();
+const sortedPosts = await getSortedPostsList();
+const tags = await getTagList();
+const categories = await getCategoryList();
+
+const selectedTags = Astro.url.searchParams.getAll("tag");
+const selectedCategories = Astro.url.searchParams.getAll("category");
+const uncategorized = Astro.url.searchParams.get("uncategorized");
+
+const filteredPosts = sortedPosts.filter((post) => {
+	if (selectedTags.length > 0 && !post.data.tags.some((tag) => selectedTags.includes(tag))) return false;
+	if (selectedCategories.length > 0 && (!post.data.category || !selectedCategories.includes(post.data.category))) return false;
+	if (uncategorized && post.data.category) return false;
+	return true;
+});
+
+const groupedPosts = filteredPosts.reduce(
+	(acc, post) => {
+		const year = post.data.published.getFullYear();
+		if (!acc[year]) acc[year] = [];
+		acc[year].push(post);
+		return acc;
+	},
+	{} as Record<number, typeof filteredPosts>,
+);
+
+const years = Object.keys(groupedPosts)
+	.map(Number)
+	.sort((a, b) => b - a);
+
+const filterLabel =
+	selectedTags.length > 0
+		? `Tag: ${selectedTags.join(", ")}`
+		: selectedCategories.length > 0
+			? `Category: ${selectedCategories.join(", ")}`
+			: uncategorized
+				? "Uncategorized"
+				: "All posts";
 ---
 
-<MainGridLayout title={i18n(I18nKey.archive)}>
-    <ArchivePanel sortedPosts={sortedPostsList} client:only="svelte"></ArchivePanel>
-</MainGridLayout>
+<LabLayout title="归档" description="文章归档">
+	<div class="lab-shell py-10 sm:py-14">
+		<section class="lab-archive-hero">
+			<div class="font-mono text-xs font-bold uppercase tracking-[0.22em] text-[var(--lab-accent)]">archive</div>
+			<div class="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+				<div>
+					<h1 class="text-3xl font-bold text-[var(--lab-fg)] sm:text-5xl">文章归档</h1>
+					<p class="mt-3 max-w-2xl text-[var(--lab-muted)]">
+						按时间整理 Android 逆向、CTF WriteUp 和安全学习记录。当前筛选：{filterLabel}。
+					</p>
+				</div>
+				<a href="/archive/" class="lab-clear-filter">全部文章</a>
+			</div>
+		</section>
 
+		<section class="mt-6 grid gap-4 lg:grid-cols-[1fr_18rem]">
+			<div class="lab-archive-list">
+				{years.length === 0 && <div class="py-12 text-center text-[var(--lab-muted)]">没有匹配的文章。</div>}
+				{years.map((year) => (
+					<div class="lab-year-group">
+						<div class="lab-year-head">
+							<span>{year}</span>
+							<small>{groupedPosts[year].length} posts</small>
+						</div>
+						<div class="grid gap-2">
+							{groupedPosts[year].map((post) => (
+								<a href={getPostUrlBySlug(post.slug)} class="lab-archive-item">
+									<time datetime={post.data.published.toISOString()}>{formatDateToYYYYMMDD(post.data.published).slice(5)}</time>
+									<div class="min-w-0 flex-1">
+										<div class="truncate font-bold text-[var(--lab-fg)]">{post.data.title}</div>
+										<div class="mt-1 truncate text-xs text-[var(--lab-muted)]">
+											{post.data.tags.map((tag) => `#${tag}`).join(" ")}
+										</div>
+									</div>
+									<Icon name="material-symbols:arrow-forward-rounded" class="lab-archive-arrow" />
+								</a>
+							))}
+						</div>
+					</div>
+				))}
+			</div>
+
+			<aside class="lab-filter-panel">
+				<div>
+					<div class="lab-filter-title">Categories</div>
+					<div class="mt-3 flex flex-wrap gap-2">
+						{categories.map((category) => (
+							<a href={category.url} class="lab-filter-chip">
+								{category.name}
+								<span>{category.count}</span>
+							</a>
+						))}
+					</div>
+				</div>
+				<div class="mt-6">
+					<div class="lab-filter-title">Tags</div>
+					<div class="mt-3 flex flex-wrap gap-2">
+						{tags.map((tag) => (
+							<a href={getTagUrl(tag.name)} class="lab-filter-chip">
+								#{tag.name}
+								<span>{tag.count}</span>
+							</a>
+						))}
+					</div>
+				</div>
+			</aside>
+		</section>
+	</div>
+</LabLayout>
+
+<style>
+	.lab-archive-hero,
+	.lab-archive-list,
+	.lab-filter-panel {
+		background: color-mix(in srgb, var(--lab-card) 78%, transparent);
+		border: 1px solid var(--lab-border);
+		border-radius: 1rem;
+		box-shadow: 0 20px 70px rgba(2, 6, 23, 0.08);
+	}
+	.lab-archive-hero {
+		padding: 1.25rem;
+	}
+	@media (min-width: 640px) {
+		.lab-archive-hero {
+			padding: 2rem;
+		}
+	}
+	.lab-clear-filter {
+		align-items: center;
+		border: 1px solid var(--lab-border);
+		border-radius: 0.8rem;
+		color: var(--lab-muted);
+		display: inline-flex;
+		font-weight: 650;
+		height: 2.45rem;
+		justify-content: center;
+		padding-inline: 0.9rem;
+		transition: color 0.2s, background 0.2s, border-color 0.2s;
+		white-space: nowrap;
+	}
+	.lab-clear-filter:hover {
+		background: color-mix(in srgb, var(--lab-accent) 10%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 36%, transparent);
+		color: var(--lab-accent);
+	}
+	.lab-archive-list {
+		padding: 1rem;
+	}
+	.lab-year-group + .lab-year-group {
+		border-top: 1px solid var(--lab-border);
+		margin-top: 1rem;
+		padding-top: 1rem;
+	}
+	.lab-year-head {
+		align-items: baseline;
+		display: flex;
+		gap: 0.8rem;
+		margin-bottom: 0.7rem;
+	}
+	.lab-year-head span {
+		color: var(--lab-fg);
+		font-size: 1.65rem;
+		font-weight: 800;
+	}
+	.lab-year-head small {
+		color: var(--lab-muted);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+	}
+	.lab-archive-item {
+		align-items: center;
+		border: 1px solid transparent;
+		border-radius: 0.85rem;
+		display: flex;
+		gap: 0.9rem;
+		padding: 0.78rem;
+		transition: background 0.2s, border-color 0.2s, transform 0.2s;
+	}
+	.lab-archive-item:hover {
+		background: color-mix(in srgb, var(--lab-accent) 8%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 28%, transparent);
+		transform: translateY(-1px);
+	}
+	.lab-archive-item time {
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.8rem;
+		font-weight: 700;
+		width: 3.3rem;
+	}
+	.lab-archive-arrow {
+		color: var(--lab-muted);
+		font-size: 1.1rem;
+		transition: color 0.2s, transform 0.2s;
+	}
+	.lab-archive-item:hover .lab-archive-arrow {
+		color: var(--lab-accent);
+		transform: translateX(2px);
+	}
+	.lab-filter-panel {
+		align-self: start;
+		padding: 1rem;
+		position: sticky;
+		top: 5.8rem;
+	}
+	.lab-filter-title {
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.75rem;
+		font-weight: 800;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+	.lab-filter-chip {
+		align-items: center;
+		border: 1px solid var(--lab-border);
+		border-radius: 999px;
+		color: var(--lab-muted);
+		display: inline-flex;
+		font-size: 0.82rem;
+		font-weight: 650;
+		gap: 0.4rem;
+		padding: 0.28rem 0.55rem;
+		transition: color 0.2s, background 0.2s, border-color 0.2s;
+	}
+	.lab-filter-chip span {
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.72rem;
+	}
+	.lab-filter-chip:hover {
+		background: color-mix(in srgb, var(--lab-accent) 9%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 34%, transparent);
+		color: var(--lab-accent);
+	}
+</style>

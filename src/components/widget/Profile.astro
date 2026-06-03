@@ -6,10 +6,11 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
 
 const config = profileConfig;
 ---
-<div class="card-base !overflow-visible p-3">
+<div class="card-base security-profile !overflow-visible p-4">
+    <div class="security-kicker text-center mb-3">Research Profile</div>
     <a aria-label="Go to About Page" href={url('/about/')}
-       class="group block relative mx-auto mt-1 mb-3
-       w-24 h-24 md:w-28 md:h-28 overflow-hidden rounded-full active:scale-95">
+       class="group block relative mx-auto mb-4
+       w-24 h-24 md:w-28 md:h-28 overflow-hidden rounded-2xl active:scale-95">
         <div class="absolute transition pointer-events-none group-hover:bg-black/30 group-active:bg-black/50
         w-full h-full z-50 flex items-center justify-center">
             <Icon name="fa6-regular:address-card"
@@ -20,8 +21,18 @@ const config = profileConfig;
     </a>
     <div class="px-2">
         <div class="font-bold text-xl text-center mb-1 dark:text-neutral-50 transition">{config.name}</div>
-        <div class="h-1 w-5 bg-[var(--primary)] mx-auto rounded-full mb-2 transition"></div>
-        {config.bio && <div class="text-center text-neutral-400 mb-2.5 transition">{config.bio}</div>}
+        <div class="h-1 w-8 bg-[var(--primary)] mx-auto rounded-full mb-3 transition"></div>
+        {config.bio && <div class="text-center text-sm leading-6 text-neutral-500 dark:text-slate-300 mb-3 transition">{config.bio}</div>}
+        <div class="grid grid-cols-2 gap-2 mb-4 text-xs">
+            <div class="security-stat">
+                <span>Focus</span>
+                <strong>Android</strong>
+            </div>
+            <div class="security-stat">
+                <span>Status</span>
+                <strong>Learning</strong>
+            </div>
+        </div>
         <div class="flex flex-wrap gap-2 justify-center mb-1">
             {config.links.length > 1 && config.links.map(item =>
                 <div class="social-qr-trigger relative">
@@ -46,6 +57,38 @@ const config = profileConfig;
 </div>
 
 <style>
+    .security-profile {
+        position: relative;
+    }
+    .security-profile::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(45, 212, 191, 0.12), transparent 45%);
+        pointer-events: none;
+    }
+    .security-stat {
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        border-radius: 0.6rem;
+        padding: 0.55rem 0.6rem;
+        background: rgba(15, 23, 42, 0.16);
+    }
+    html:not(.dark) .security-stat {
+        background: rgba(241, 245, 249, 0.8);
+        border-color: rgba(15, 23, 42, 0.08);
+    }
+    .security-stat span {
+        display: block;
+        color: rgba(148, 163, 184, 0.86);
+        line-height: 1.1;
+    }
+    .security-stat strong {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--primary);
+        font-size: 0.8rem;
+    }
     .social-qr-panel {
         opacity: 0;
         transform: translate(-50%, 0.25rem);

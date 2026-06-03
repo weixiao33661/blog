@@ -1,9 +1,11 @@
 ---
 import type { GetStaticPaths } from "astro";
+import { Icon } from "astro-icon/components";
 import Pagination from "../components/control/Pagination.astro";
-import PostPage from "../components/PostPage.astro";
+import GlowPostCard from "../components/lab/GlowPostCard.astro";
 import { PAGE_SIZE } from "../constants/constants";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { profileConfig } from "../config";
+import LabLayout from "../layouts/LabLayout.astro";
 import { getSortedPosts } from "../utils/content-utils";
 
 export const getStaticPaths = (async ({ paginate }) => {
@@ -15,9 +17,106 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 
 const len = page.data.length;
+const isFirstPage = page.currentPage === 1;
+const github = profileConfig.links.find((item) => item.name.toLowerCase() === "github");
 ---
 
-<MainGridLayout>
-    <PostPage page={page}></PostPage>
-    <Pagination class="mx-auto onload-animation" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
-</MainGridLayout>
+<LabLayout>
+	<div class="lab-shell">
+		{isFirstPage && (
+			<section class="relative z-10 pb-14 pt-10 sm:pb-20 sm:pt-14">
+				<div class="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--lab-border)] bg-[color-mix(in_srgb,var(--lab-card)_70%,transparent)] px-3.5 py-1.5 font-mono text-xs sm:text-sm">
+					<span class="relative flex h-2 w-2">
+						<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--lab-accent)] opacity-60"></span>
+						<span class="relative inline-flex h-2 w-2 rounded-full bg-[var(--lab-accent)]"></span>
+					</span>
+					<span class="text-[var(--lab-accent)]">~</span>/ready-to-reverse <span class="opacity-40">$</span>
+				</div>
+
+				<h1 class="lab-hero-title text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
+					weixiao
+					<a target="_blank" href="/rss.xml" class="ml-1 inline-block align-middle" aria-label="RSS Feed" title="RSS Feed">
+						<Icon name="material-symbols:rss-feed-rounded" class="text-[1.45rem] text-[var(--lab-accent)] opacity-45 transition-opacity hover:opacity-100" />
+					</a>
+				</h1>
+
+				<p class="mt-7 max-w-xl text-base leading-relaxed text-[var(--lab-muted)] sm:text-lg">
+					这里记录 Android 逆向、CTF WriteUp、网络安全学习和工具链实践，重点放在可复现的过程、排错记录与实战经验。
+				</p>
+				<p class="mt-2 text-sm text-[var(--lab-muted)]">
+					作者
+					{github ? (
+						<a href={github.url} target="_blank" rel="noopener" class="font-medium text-[var(--lab-fg)] underline decoration-dashed underline-offset-4 hover:text-[var(--lab-accent)]">
+							{profileConfig.name}
+						</a>
+					) : (
+						<span class="font-medium text-[var(--lab-fg)]">{profileConfig.name}</span>
+					)}
+				</p>
+
+				<div class="mt-6 flex flex-wrap items-center gap-2">
+					{github && (
+						<a href={github.url} target="_blank" rel="noopener" class="lab-social-link" aria-label="GitHub">
+							<Icon name="fa6-brands:github" />
+						</a>
+					)}
+					<a href="/about/" class="lab-cta">About</a>
+					<a href="/archive/" class="lab-cta lab-cta-primary">Browse posts</a>
+				</div>
+			</section>
+		)}
+
+		<section class="relative z-10 pb-10">
+			<div class="mb-4 flex items-end justify-between gap-4">
+				<div>
+					<div class="font-mono text-xs font-bold uppercase tracking-[0.22em] text-[var(--lab-accent)]">
+						{isFirstPage ? "latest posts" : `posts page ${page.currentPage}`}
+					</div>
+					<h2 class="mt-2 text-2xl font-bold text-[var(--lab-fg)]">最新文章</h2>
+				</div>
+				<a href="/archive/" class="hidden rounded-xl border border-[var(--lab-border)] px-4 py-2 text-sm font-medium text-[var(--lab-muted)] transition hover:border-[color-mix(in_srgb,var(--lab-accent)_40%,transparent)] hover:text-[var(--lab-accent)] sm:inline-flex">
+					归档
+				</a>
+			</div>
+
+			<ul class="divide-y divide-[var(--lab-border)]">
+				{page.data.map((entry) => <GlowPostCard entry={entry} />)}
+			</ul>
+		</section>
+
+		<Pagination class="mx-auto mb-12" page={page} style={`animation-delay: calc(var(--content-delay) + ${(len)*50}ms)`}></Pagination>
+	</div>
+</LabLayout>
+
+<style>
+	.lab-social-link,
+	.lab-cta {
+		align-items: center;
+		background: color-mix(in srgb, var(--lab-card) 74%, transparent);
+		border: 1px solid var(--lab-border);
+		border-radius: 0.8rem;
+		color: color-mix(in srgb, var(--lab-fg) 78%, transparent);
+		display: inline-flex;
+		font-weight: 650;
+		height: 2.45rem;
+		justify-content: center;
+		padding-inline: 0.9rem;
+		transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.2s;
+	}
+	.lab-social-link {
+		width: 2.45rem;
+		padding-inline: 0;
+	}
+	.lab-social-link:hover,
+	.lab-cta:hover {
+		background: color-mix(in srgb, var(--lab-accent) 10%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 38%, transparent);
+		color: var(--lab-accent);
+		transform: translateY(-1px);
+	}
+	.lab-cta-primary {
+		background: color-mix(in srgb, var(--lab-accent) 14%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 36%, transparent);
+		color: var(--lab-accent);
+	}
+</style>

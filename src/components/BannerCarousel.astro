@@ -1,8 +1,10 @@
 ---
 import { Image } from "astro:assets";
-import banner1 from "../assets/onepiece/banner-1.jpg";
-import banner2 from "../assets/onepiece/banner-2.jpg";
-import banner3 from "../assets/onepiece/banner-3.jpg";
+import banner01 from "../assets/top-banners/banner-01.jpg";
+import banner02 from "../assets/top-banners/banner-02.jpg";
+import banner03 from "../assets/top-banners/banner-03.jpg";
+import banner04 from "../assets/top-banners/banner-04.jpg";
+import banner05 from "../assets/top-banners/banner-05.jpg";
 
 interface Props {
 	id?: string;
@@ -10,14 +12,20 @@ interface Props {
 }
 
 const { id, class: className } = Astro.props;
-const slides = [banner1, banner2, banner3];
+const slides = [
+	banner01,
+	banner02,
+	banner03,
+	banner04,
+	banner05,
+];
 ---
 
 <div id={id} class:list={[className, "banner-carousel relative overflow-hidden"]}>
 	<div class="banner-carousel-track absolute inset-0">
 		{slides.map((img, i) => (
 			<div class="banner-slide absolute inset-0 transition-opacity duration-700" data-index={i} data-active={i === 0 ? "true" : "false"}>
-				<Image src={img} alt={`Banner ${i + 1}`} class="w-full h-full object-cover" loading={i === 0 ? "eager" : "lazy"} />
+				<Image src={img} alt={`Banner ${i + 1}`} class="banner-image w-full h-full object-cover" loading={i === 0 ? "eager" : "lazy"} />
 			</div>
 		))}
 	</div>
@@ -44,6 +52,14 @@ const slides = [banner1, banner2, banner3];
 	}
 	.banner-slide[data-active="true"] {
 		opacity: 1;
+	}
+	.banner-image {
+		object-position: 24% center;
+	}
+	@media (min-width: 768px) {
+		.banner-image {
+			object-position: center;
+		}
 	}
 	.banner-overlay {
 		background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.55) 100%);

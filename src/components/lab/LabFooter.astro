@@ -1,0 +1,85 @@
+---
+import { Icon } from "astro-icon/components";
+import { profileConfig } from "../../config";
+import { url } from "../../utils/url-utils";
+import ImageWrapper from "../misc/ImageWrapper.astro";
+
+const currentYear = new Date().getFullYear();
+const github = profileConfig.links.find((item) => item.name.toLowerCase() === "github");
+---
+
+<footer class="lab-footer mt-auto">
+	<div class="h-px w-full bg-gradient-to-r from-transparent via-[var(--lab-border)] to-transparent"></div>
+	<div class="lab-shell py-8 sm:py-10">
+		<div class="flex flex-col items-center justify-between gap-6 sm:flex-row sm:items-start">
+			<div class="flex flex-col items-center gap-3 sm:items-start">
+				<a href={url("/")} class="flex items-center gap-2 font-bold">
+					<ImageWrapper src={profileConfig.avatar || ""} alt={`${profileConfig.name} logo`} class="size-7 rounded-md border border-[var(--lab-border)] bg-[var(--lab-bg)] p-0.5" />
+					<span class="lab-footer-logo">weixiao</span>
+				</a>
+				<p class="max-w-xs text-center text-xs leading-relaxed text-[var(--lab-muted)] sm:text-left">
+					记录 Android 逆向、CTF WriteUp 与可复现的安全学习过程。
+				</p>
+			</div>
+			<div class="flex flex-col items-center gap-2 sm:items-end">
+				<span class="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--lab-muted)]">contact</span>
+				<div class="flex items-center gap-1">
+					{github && (
+						<a href={github.url} target="_blank" rel="noopener" class="lab-footer-btn" aria-label="GitHub">
+							<Icon name="fa6-brands:github" />
+						</a>
+					)}
+					<a href="mailto:weixiao33661@gmail.com" class="lab-footer-btn" aria-label="Email">
+						<Icon name="material-symbols:mail-outline-rounded" />
+					</a>
+					<a href={url("rss.xml")} class="lab-footer-btn" aria-label="RSS">
+						<Icon name="material-symbols:rss-feed-rounded" />
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="mt-8 flex items-center gap-3" aria-hidden="true">
+			<div class="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--lab-border)] to-transparent"></div>
+		</div>
+		<div class="mt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
+			<p class="font-mono text-[11px] tracking-wide text-[var(--lab-muted)]">
+				&copy; {currentYear} {profileConfig.name}. All Rights Reserved.
+			</p>
+			<p class="font-mono text-[11px] tracking-wide text-[var(--lab-muted)]">
+				Powered by Astro
+			</p>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.lab-footer {
+		background: color-mix(in srgb, var(--lab-bg) 62%, transparent);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+	}
+	.lab-footer-logo {
+		background: linear-gradient(135deg, var(--lab-fg), var(--lab-accent));
+		background-clip: text;
+		-webkit-background-clip: text;
+		color: transparent;
+	}
+	.lab-footer-btn {
+		align-items: center;
+		background: color-mix(in srgb, var(--lab-card) 76%, transparent);
+		border: 1px solid var(--lab-border);
+		border-radius: 0.65rem;
+		color: color-mix(in srgb, var(--lab-fg) 74%, transparent);
+		display: inline-flex;
+		height: 2rem;
+		justify-content: center;
+		transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+		width: 2rem;
+	}
+	.lab-footer-btn:hover {
+		background: color-mix(in srgb, var(--lab-accent) 11%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 38%, transparent);
+		color: var(--lab-accent);
+		transform: translateY(-1px);
+	}
+</style>

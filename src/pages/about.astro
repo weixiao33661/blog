@@ -1,10 +1,9 @@
 ---
-
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
-import I18nKey from "../i18n/i18nKey";
-import { i18n } from "../i18n/translation";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+import LabLayout from "../layouts/LabLayout.astro";
+import { profileConfig } from "../config";
 
 const aboutPost = await getEntry("spec", "about");
 
@@ -13,13 +12,106 @@ if (!aboutPost) {
 }
 
 const { Content } = await render(aboutPost);
+
+const contactLinks = profileConfig.links.filter((item) => item.name !== "微信" && item.name !== "QQ");
 ---
-<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full ">
-            <Markdown class="mt-2">
-                <Content />
-            </Markdown>
-        </div>
-    </div>
-</MainGridLayout>
+
+<LabLayout title="关于" description="关于 weixiao">
+	<div class="lab-shell py-10 sm:py-14">
+		<section class="lab-about-hero">
+			<div>
+				<div class="font-mono text-xs font-bold uppercase tracking-[0.22em] text-[var(--lab-accent)]">about</div>
+				<h1 class="mt-3 text-3xl font-bold text-[var(--lab-fg)] sm:text-5xl">{profileConfig.name}</h1>
+				<p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--lab-muted)] sm:text-lg">
+					{profileConfig.bio}
+				</p>
+			</div>
+			<div class="lab-about-actions">
+				{contactLinks.map((item) => (
+					<a href={item.url} target={item.url.startsWith("http") ? "_blank" : undefined} rel={item.url.startsWith("http") ? "noopener" : undefined} class="lab-about-link">
+						<Icon name={item.icon} />
+						<span>{item.name}</span>
+					</a>
+				))}
+			</div>
+		</section>
+
+		<section class="lab-about-content">
+			<Markdown class="lab-about-markdown">
+				<Content />
+			</Markdown>
+		</section>
+	</div>
+</LabLayout>
+
+<style>
+	.lab-about-hero,
+	.lab-about-content {
+		background: color-mix(in srgb, var(--lab-card) 78%, transparent);
+		border: 1px solid var(--lab-border);
+		border-radius: 1rem;
+		box-shadow: 0 20px 70px rgba(2, 6, 23, 0.08);
+	}
+	.lab-about-hero {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding: 1.25rem;
+	}
+	@media (min-width: 720px) {
+		.lab-about-hero {
+			align-items: flex-end;
+			flex-direction: row;
+			justify-content: space-between;
+			padding: 2rem;
+		}
+	}
+	.lab-about-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
+	.lab-about-link {
+		align-items: center;
+		border: 1px solid var(--lab-border);
+		border-radius: 0.8rem;
+		color: var(--lab-muted);
+		display: inline-flex;
+		font-weight: 650;
+		gap: 0.45rem;
+		height: 2.45rem;
+		padding-inline: 0.9rem;
+		transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.2s;
+	}
+	.lab-about-link:hover {
+		background: color-mix(in srgb, var(--lab-accent) 10%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 36%, transparent);
+		color: var(--lab-accent);
+		transform: translateY(-1px);
+	}
+	.lab-about-content {
+		margin-top: 1rem;
+		padding: 1.25rem;
+	}
+	@media (min-width: 640px) {
+		.lab-about-content {
+			padding: 2rem;
+		}
+	}
+	.lab-about-markdown :global(h1),
+	.lab-about-markdown :global(h2),
+	.lab-about-markdown :global(h3),
+	.lab-about-markdown :global(h4),
+	.lab-about-markdown :global(h5),
+	.lab-about-markdown :global(h6) {
+		color: var(--lab-fg);
+		letter-spacing: 0;
+	}
+	.lab-about-markdown :global(p),
+	.lab-about-markdown :global(li) {
+		color: color-mix(in srgb, var(--lab-fg) 84%, transparent);
+	}
+	.lab-about-markdown :global(a:not(.no-styling)) {
+		color: var(--lab-accent);
+	}
+</style>

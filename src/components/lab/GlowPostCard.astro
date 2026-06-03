@@ -1,0 +1,79 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { getPostUrlBySlug } from "../../utils/url-utils";
+
+interface Props {
+	entry: CollectionEntry<"posts">;
+}
+
+const { entry } = Astro.props;
+const href = getPostUrlBySlug(entry.slug);
+const tags = entry.data.tags?.slice(0, 3) || [];
+const date = entry.data.published.toLocaleDateString("en-GB", {
+	day: "2-digit",
+	month: "short",
+	year: "numeric",
+});
+---
+
+<li class="lab-post-card card-glow group/card relative my-3 rounded-2xl border border-[var(--lab-border)] p-4 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[color-mix(in_srgb,var(--lab-accent)_36%,transparent)] hover:bg-[color-mix(in_srgb,var(--lab-accent)_7%,transparent)] hover:shadow-lg hover:shadow-[color-mix(in_srgb,var(--lab-accent)_10%,transparent)] sm:p-5">
+	<div class="card-glow-effect pointer-events-none absolute inset-0 z-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" aria-hidden="true"></div>
+	<div class="card-noise pointer-events-none absolute inset-0 z-[1] rounded-2xl opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" aria-hidden="true"></div>
+	<a href={href} class="absolute inset-0 z-10 rounded-2xl" aria-label={entry.data.title}>
+		<span class="sr-only">{entry.data.title}</span>
+	</a>
+	<div class="relative z-[5]">
+		<div class="mb-2 flex flex-wrap items-center gap-2">
+			{(entry.data.category || tags[0]) && <span class="lab-post-kicker">{entry.data.category || tags[0]}</span>}
+			{tags.map((tag) => <span class="lab-post-tag">{tag}</span>)}
+		</div>
+		<h3 class="text-lg font-semibold text-[var(--lab-fg)] transition-colors duration-200 group-hover/card:text-[var(--lab-accent)]">
+			{entry.data.title}
+		</h3>
+		<div class="mt-2 flex items-center gap-x-2 text-sm text-[var(--lab-muted)]">
+			<Icon name="material-symbols:calendar-month-outline-rounded" class="text-[1.15rem]" />
+			<time datetime={entry.data.published.toISOString()}>{date}</time>
+		</div>
+		<p class="mt-2 line-clamp-2 text-sm leading-relaxed text-[var(--lab-muted)]">
+			{entry.data.description || "暂无摘要，点击查看完整记录。"}
+		</p>
+	</div>
+</li>
+
+<style>
+	.card-glow-effect {
+		background: radial-gradient(
+			350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+			color-mix(in oklab, var(--lab-accent) 10%, transparent) 0%,
+			color-mix(in oklab, var(--lab-accent) 6%, transparent) 24%,
+			color-mix(in oklab, var(--lab-accent) 3%, transparent) 48%,
+			transparent 78%
+		);
+		transform: translateZ(0);
+		will-change: transform;
+	}
+	.card-noise {
+		background-image:
+			radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.09) 0 1px, transparent 1px),
+			radial-gradient(circle at 70% 65%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px);
+		background-size: 34px 34px, 46px 46px;
+		mix-blend-mode: overlay;
+	}
+	.lab-post-kicker,
+	.lab-post-tag {
+		border: 1px solid color-mix(in srgb, var(--lab-accent) 25%, transparent);
+		border-radius: 999px;
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		padding: 0.16rem 0.45rem;
+		text-transform: uppercase;
+	}
+	.lab-post-tag {
+		color: var(--lab-muted);
+		border-color: var(--lab-border);
+	}
+</style>

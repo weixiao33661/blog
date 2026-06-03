@@ -2,7 +2,7 @@
 title: "？CTF"
 published: 2025-09-05
 description: "？CTF Reverse WriteUp"
-image: '../../../assets/covers/question-ctf-cover.jpg'
+image: '../../../assets/covers/pro/question-ctf.jpg'
 tags: [Reverse, WriteUp]
 category: "WriteUp"
 draft: false

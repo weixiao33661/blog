@@ -1,17 +1,17 @@
-# ONE PIECE 航海日志 ⚓
+# weixiao Security Lab
 
-> 我是要成为海贼王的男人。
+Android 逆向、CTF WriteUp 与网络安全学习笔记。
 
-[weixiao](https://github.com/) 的个人博客，主题为海贼王 (One Piece)。基于 [Astro](https://astro.build) 与 [Fuwari](https://github.com/saicaca/fuwari) 主题深度定制。
+[weixiao](https://github.com/) 的个人博客。基于 [Astro](https://astro.build) 与 [Fuwari](https://github.com/saicaca/fuwari) 主题定制，当前视觉定位为网络安全研究笔记。
 
 ## 站点特色
 
-- 顶部 3 图自动轮播 (5 秒切换 + 手动翻页)
-- 全站固定通缉令背景 + 双层渐变遮罩
-- 文章卡片半透明毛玻璃，正文配草帽红描边图框
+- 顶部 5 图自动轮播 (5 秒切换 + 手动翻页)
+- 深色安全研究风格背景，带低调网格与终端感视觉层
+- 文章卡片使用安全报告式信息结构，突出分类、标签、日期与摘要
 - 头像信息卡支持微信、QQ 二维码悬停预览
 - 友链页参考 bx33661 风格，分博客与组织两组
-- 暗黑模式默认开启 (海贼王素材色彩浓，深色更协调)
+- 保留明暗模式切换，默认跟随系统
 
 ## 本地开发
 
@@ -28,8 +28,10 @@ pnpm new-post 标题   # 新建一篇文章
 
 ```
 src/
-├─ assets/onepiece/      # 海贼王素材 (背景、轮播图、头像)
+├─ assets/top-banners/   # 顶部轮播图
+├─ assets/covers/        # 文章封面
 ├─ assets/friends/       # 友链头像
+├─ assets/images/        # 站点头像等通用图片
 ├─ components/
 │  └─ BannerCarousel.astro   # 顶部轮播组件
 ├─ content/
@@ -37,7 +39,7 @@ src/
 │  └─ spec/about.md      # 关于页内容
 ├─ data/friends.ts       # 友链数据
 ├─ layouts/
-│  └─ Layout.astro       # 注入背景层 + 主题 CSS 变量
+│  └─ Layout.astro       # 注入背景层 + 安全风格全局样式
 ├─ pages/
 │  └─ friends.astro      # 友链页
 └─ config.ts             # 站点全局配置
@@ -60,21 +62,19 @@ public/
 
 ## 主题色变量
 
-视觉调整集中在 `src/layouts/Layout.astro` 顶部的 `:root`：
+视觉调整主要集中在 `src/layouts/Layout.astro` 的安全背景层，以及 `src/styles/variables.styl` 的主题变量：
 
 ```css
---op-bg-opacity        背景图本身透明度
---op-overlay-bot       底部遮罩深度
---op-card-bg-dark      暗色卡片不透明度
---op-card-blur         毛玻璃模糊半径
---op-accent            草帽红主色
+--sec-card-bg-dark      暗色卡片背景
+--sec-card-border-dark  暗色卡片边框
+--sec-card-blur         毛玻璃模糊半径
+--sec-accent            安全风格强调色
 ```
 
 ## 致谢
 
 - [Astro](https://astro.build) — Web framework
 - [Fuwari](https://github.com/saicaca/fuwari) — 原始博客主题 (MIT)
-- 海贼王 (ONE PIECE) © 尾田荣一郎 / 集英社 / 东映动画 — 角色设定版权归原作者所有，本站仅作个人爱好展示
 
 ## License
 

@@ -39,9 +39,12 @@ const className = Astro.props.class;
 const coverImage = image || "../../../assets/covers/default-cover.jpg";
 const { remarkPluginFrontmatter } = await entry.render();
 ---
-<div class:list={["card-base group w-full rounded-[var(--radius-large)] overflow-hidden relative", className]} style={style}>
-    <a href={url} aria-label={title} class="relative block h-44 md:h-56 overflow-hidden active:scale-[0.99]">
-        <div class="absolute pointer-events-none z-10 inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent transition group-hover:from-black/75 group-hover:via-black/25"></div>
+<div class:list={["card-base security-post-card group w-full rounded-[var(--radius-large)] overflow-hidden relative", className]} style={style}>
+    <a href={url} aria-label={title} class="relative block h-44 md:h-52 overflow-hidden active:scale-[0.99]">
+        <div class="absolute pointer-events-none z-10 inset-0 bg-gradient-to-t from-slate-950/82 via-slate-950/24 to-transparent transition group-hover:from-slate-950/88 group-hover:via-slate-950/32"></div>
+        <div class="absolute left-4 top-4 z-20 security-kicker rounded-md border border-white/15 bg-black/35 px-2.5 py-1 text-[0.63rem] text-cyan-100 backdrop-blur">
+            {category || "Security"}
+        </div>
         <div class="absolute pointer-events-none z-20 inset-0 flex items-center justify-center">
             <Icon name="material-symbols:chevron-right-rounded"
                   class="transition opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 text-white text-6xl drop-shadow-lg">
@@ -52,13 +55,13 @@ const { remarkPluginFrontmatter } = await entry.render();
         </ImageWrapper>
     </a>
 
-    <div class="px-6 md:px-8 pt-5 md:pt-6 pb-6 relative">
+    <div class="px-5 md:px-7 pt-5 md:pt-6 pb-6 relative">
         <a href={url}
-           class="transition group/title w-full block font-bold mb-3 text-2xl md:text-3xl text-90
+           class="transition group/title w-full block font-bold mb-3 text-xl md:text-2xl text-90 leading-snug
         hover:text-[var(--primary)] dark:hover:text-[var(--primary)]
         active:text-[var(--title-active)] dark:active:text-[var(--title-active)]
         before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
-        before:absolute before:top-[31px] before:left-[18px] before:hidden md:before:block
+        before:absolute before:top-[31px] before:left-[14px] before:hidden md:before:block
         ">
             {title}
             <Icon class="inline text-[1.75rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute" name="material-symbols:chevron-right-rounded" ></Icon>
@@ -71,7 +74,7 @@ const { remarkPluginFrontmatter } = await entry.render();
             { description || remarkPluginFrontmatter.excerpt }
         </div>
 
-        <div class="text-sm text-black/30 dark:text-white/30 flex gap-4 transition">
+        <div class="text-sm text-black/35 dark:text-slate-400 flex gap-4 transition">
             <div>
                 {remarkPluginFrontmatter.words} {" " + i18n(remarkPluginFrontmatter.words === 1 ? I18nKey.wordCount : I18nKey.wordsCount)}
             </div>
@@ -83,3 +86,22 @@ const { remarkPluginFrontmatter } = await entry.render();
     </div>
 </div>
 <div class="transition border-t-[1px] border-dashed mx-6 border-black/10 dark:border-white/[0.15] last:border-t-0 md:hidden"></div>
+
+<style>
+    .security-post-card {
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+    .security-post-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: linear-gradient(135deg, rgba(45, 212, 191, 0.10), transparent 34%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .security-post-card:hover::after {
+        opacity: 1;
+    }
+</style>

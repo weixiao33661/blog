@@ -1,142 +1,217 @@
 ---
 import { Image } from "astro:assets";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
-import { friends, orgs, type Friend } from "../data/friends";
+import { Icon } from "astro-icon/components";
+import LabLayout from "../layouts/LabLayout.astro";
+import { friends, orgs } from "../data/friends";
 
 const APPLY_MAIL = "weixiao33661@gmail.com";
-
-const renderCard = (f: Friend) => f;
 ---
 
-<MainGridLayout title="友链" description="海上的旅人总会遇见同行的船">
-	<div class="card-base px-6 md:px-9 py-6 mb-4">
-		<div class="flex items-baseline justify-between flex-wrap gap-3">
+<LabLayout title="友链" description="安全博客与组织链接">
+	<div class="lab-shell py-10 sm:py-14">
+		<section class="lab-friends-hero">
 			<div>
-				<h1 class="text-2xl font-bold text-90">友链</h1>
-				<p class="text-sm text-50 mt-1">海上的旅人总会遇见同行的船 · 共 {friends.length} 位</p>
+				<div class="font-mono text-xs font-bold uppercase tracking-[0.22em] text-[var(--lab-accent)]">friends</div>
+				<h1 class="mt-3 text-3xl font-bold text-[var(--lab-fg)] sm:text-5xl">友链</h1>
+				<p class="mt-4 max-w-2xl text-base leading-relaxed text-[var(--lab-muted)]">
+					这里收录安全研究、CTF、工程实践相关的博客与组织链接。
+				</p>
 			</div>
-			<a href={`mailto:${APPLY_MAIL}?subject=申请友链`} class="btn-regular px-4 h-9 rounded-md text-sm">
-				申请友链
+			<a href={`mailto:${APPLY_MAIL}?subject=申请友链`} class="lab-apply-link">
+				<Icon name="material-symbols:mail-outline-rounded" />
+				<span>申请友链</span>
 			</a>
-		</div>
-	</div>
+		</section>
 
-	<div class="card-base px-6 md:px-9 py-6 mb-4">
-		<h2 class="text-lg font-bold text-90 mb-4 flex items-center gap-2">
-			<span class="op-section-bar"></span>
-			博客 · {friends.length}
-		</h2>
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-			{friends.map((f) => (
-				<a href={f.url} target="_blank" rel="noopener nofollow" class="friend-card group">
-					<Image src={f.avatar} alt={f.name} width={96} height={96} class="friend-avatar" loading="lazy" />
-					<div class="min-w-0 flex-1">
-						<div class="friend-name">{f.name}</div>
-						{f.bio && <div class="friend-bio">{f.bio}</div>}
-						<div class="friend-url">{new URL(f.url).host}</div>
-					</div>
-				</a>
-			))}
-		</div>
-	</div>
+		<section class="lab-friend-section">
+			<div class="lab-section-head">
+				<div>
+					<div class="lab-section-kicker">blogs</div>
+					<h2>博客 · {friends.length}</h2>
+				</div>
+			</div>
+			<div class="lab-friend-grid">
+				{friends.map((friend) => (
+					<a href={friend.url} target="_blank" rel="noopener nofollow" class="lab-friend-card">
+						<Image src={friend.avatar} alt={friend.name} width={96} height={96} class="lab-friend-avatar" loading="lazy" />
+						<div class="min-w-0 flex-1">
+							<div class="lab-friend-name">{friend.name}</div>
+							{friend.bio && <div class="lab-friend-bio">{friend.bio}</div>}
+							<div class="lab-friend-url">{new URL(friend.url).host}</div>
+						</div>
+						<Icon name="material-symbols:arrow-outward-rounded" class="lab-friend-arrow" />
+					</a>
+				))}
+			</div>
+		</section>
 
-	<div class="card-base px-6 md:px-9 py-6 mb-4">
-		<h2 class="text-lg font-bold text-90 mb-4 flex items-center gap-2">
-			<span class="op-section-bar"></span>
-			组织 · {orgs.length}
-		</h2>
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-			{orgs.map((f) => (
-				<a href={f.url} target="_blank" rel="noopener nofollow" class="friend-card group">
-					<Image src={f.avatar} alt={f.name} width={96} height={96} class="friend-avatar" loading="lazy" />
-					<div class="min-w-0 flex-1">
-						<div class="friend-name">{f.name}</div>
-						{f.bio && <div class="friend-bio">{f.bio}</div>}
-						<div class="friend-url">{new URL(f.url).host}</div>
-					</div>
-				</a>
-			))}
-		</div>
-	</div>
+		<section class="lab-friend-section">
+			<div class="lab-section-head">
+				<div>
+					<div class="lab-section-kicker">organizations</div>
+					<h2>组织 · {orgs.length}</h2>
+				</div>
+			</div>
+			<div class="lab-friend-grid">
+				{orgs.map((friend) => (
+					<a href={friend.url} target="_blank" rel="noopener nofollow" class="lab-friend-card">
+						<Image src={friend.avatar} alt={friend.name} width={96} height={96} class="lab-friend-avatar" loading="lazy" />
+						<div class="min-w-0 flex-1">
+							<div class="lab-friend-name">{friend.name}</div>
+							{friend.bio && <div class="lab-friend-bio">{friend.bio}</div>}
+							<div class="lab-friend-url">{new URL(friend.url).host}</div>
+						</div>
+						<Icon name="material-symbols:arrow-outward-rounded" class="lab-friend-arrow" />
+					</a>
+				))}
+			</div>
+		</section>
 
-	<div class="card-base px-6 md:px-9 py-6 mb-4">
-		<h2 class="text-lg font-bold text-90 mb-3 flex items-center gap-2">
-			<span class="op-section-bar"></span>
-			申请友链
-		</h2>
-		<div class="text-sm text-75 leading-relaxed space-y-1">
-			<p>欢迎留下你的航行坐标，发邮件到 <a class="link-underline" href={`mailto:${APPLY_MAIL}`}>{APPLY_MAIL}</a>，附上：</p>
-			<ul class="list-disc list-inside ml-2 mt-2 space-y-0.5">
-				<li>站点名称</li>
-				<li>站点地址</li>
-				<li>一句话简介</li>
-				<li>头像图片地址 (可选,不提供我会从你站抓 favicon)</li>
-			</ul>
-		</div>
+		<section class="lab-apply-panel">
+			<div class="lab-section-kicker">link exchange</div>
+			<h2 class="mt-2 text-xl font-bold text-[var(--lab-fg)]">申请友链</h2>
+			<p class="mt-3 text-sm leading-relaxed text-[var(--lab-muted)]">
+				可以发邮件到 <a href={`mailto:${APPLY_MAIL}`}>{APPLY_MAIL}</a>，附上站点名称、地址、一句话简介和头像图片地址。
+			</p>
+		</section>
 	</div>
-</MainGridLayout>
+</LabLayout>
 
 <style>
-	.op-section-bar {
-		display: inline-block;
-		width: 4px;
-		height: 18px;
-		background: var(--op-accent, #d9342b);
-		border-radius: 2px;
+	.lab-friends-hero,
+	.lab-friend-section,
+	.lab-apply-panel {
+		background: color-mix(in srgb, var(--lab-card) 78%, transparent);
+		border: 1px solid var(--lab-border);
+		border-radius: 1rem;
+		box-shadow: 0 20px 70px rgba(2, 6, 23, 0.08);
 	}
-	.friend-card {
+	.lab-friends-hero {
 		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding: 1.25rem;
+	}
+	@media (min-width: 720px) {
+		.lab-friends-hero {
+			align-items: flex-end;
+			flex-direction: row;
+			justify-content: space-between;
+			padding: 2rem;
+		}
+	}
+	.lab-apply-link {
 		align-items: center;
-		gap: 14px;
-		padding: 14px;
-		border-radius: 12px;
-		background: rgba(255, 255, 255, 0.04);
-		border: 1px solid rgba(255, 255, 255, 0.06);
-		transition: transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
-		text-decoration: none;
-		color: inherit;
-	}
-	html:not(.dark) .friend-card {
-		background: rgba(0, 0, 0, 0.03);
-		border-color: rgba(0, 0, 0, 0.06);
-	}
-	.friend-card:hover {
-		transform: translateY(-2px);
-		background: rgba(217, 52, 43, 0.08);
-		border-color: rgba(217, 52, 43, 0.45);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-	}
-	.friend-avatar {
-		width: 56px;
-		height: 56px;
-		border-radius: 9999px;
-		object-fit: cover;
-		flex-shrink: 0;
-		border: 2px solid rgba(217, 52, 43, 0.4);
-	}
-	.friend-name {
+		border: 1px solid color-mix(in srgb, var(--lab-accent) 34%, transparent);
+		border-radius: 0.8rem;
+		color: var(--lab-accent);
+		display: inline-flex;
 		font-weight: 700;
-		font-size: 0.95rem;
-		color: var(--op-text-dark, #f4ecd8);
+		gap: 0.45rem;
+		height: 2.55rem;
+		padding-inline: 0.95rem;
+		transition: background 0.2s, transform 0.2s;
 		white-space: nowrap;
+	}
+	.lab-apply-link:hover {
+		background: color-mix(in srgb, var(--lab-accent) 10%, transparent);
+		transform: translateY(-1px);
+	}
+	.lab-friend-section,
+	.lab-apply-panel {
+		margin-top: 1rem;
+		padding: 1rem;
+	}
+	@media (min-width: 640px) {
+		.lab-friend-section,
+		.lab-apply-panel {
+			padding: 1.35rem;
+		}
+	}
+	.lab-section-head {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+	.lab-section-kicker {
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.75rem;
+		font-weight: 800;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+	.lab-section-head h2 {
+		color: var(--lab-fg);
+		font-size: 1.2rem;
+		font-weight: 800;
+		margin-top: 0.25rem;
+	}
+	.lab-friend-grid {
+		display: grid;
+		gap: 0.8rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+	.lab-friend-card {
+		align-items: center;
+		border: 1px solid var(--lab-border);
+		border-radius: 0.9rem;
+		display: flex;
+		gap: 0.85rem;
+		min-width: 0;
+		padding: 0.85rem;
+		transition: background 0.2s, border-color 0.2s, transform 0.2s;
+	}
+	.lab-friend-card:hover {
+		background: color-mix(in srgb, var(--lab-accent) 8%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 30%, transparent);
+		transform: translateY(-2px);
+	}
+	.lab-friend-avatar {
+		border: 1px solid color-mix(in srgb, var(--lab-accent) 25%, transparent);
+		border-radius: 0.75rem;
+		flex-shrink: 0;
+		height: 3.2rem;
+		object-fit: cover;
+		width: 3.2rem;
+	}
+	.lab-friend-name {
+		color: var(--lab-fg);
+		font-weight: 800;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
-	html:not(.dark) .friend-name { color: var(--op-text-light, #1a1410); }
-	.friend-bio {
+	.lab-friend-bio,
+	.lab-friend-url {
+		color: var(--lab-muted);
 		font-size: 0.8rem;
-		opacity: 0.7;
-		margin-top: 2px;
-		white-space: nowrap;
+		margin-top: 0.12rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
-	.friend-url {
-		font-size: 0.7rem;
-		opacity: 0.5;
-		margin-top: 2px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+	.lab-friend-url {
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.72rem;
+		opacity: 0.78;
+	}
+	.lab-friend-arrow {
+		color: var(--lab-muted);
+		flex-shrink: 0;
+		font-size: 1.1rem;
+		transition: color 0.2s, transform 0.2s;
+	}
+	.lab-friend-card:hover .lab-friend-arrow {
+		color: var(--lab-accent);
+		transform: translate(1px, -1px);
+	}
+	.lab-apply-panel a {
+		color: var(--lab-accent);
+		font-weight: 700;
+		text-decoration: underline;
+		text-decoration-style: dashed;
+		text-underline-offset: 0.25rem;
 	}
 </style>

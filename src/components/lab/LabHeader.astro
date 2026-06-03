@@ -1,0 +1,262 @@
+---
+import { Icon } from "astro-icon/components";
+import { profileConfig, siteConfig } from "../../config";
+import { url } from "../../utils/url-utils";
+import ImageWrapper from "../misc/ImageWrapper.astro";
+
+const navLinks = [
+	{ name: "Posts", url: "/archive/" },
+	{ name: "Tags", url: "/archive/" },
+	{ name: "About", url: "/about/" },
+	{ name: "Friends", url: "/friends/" },
+];
+
+const github = profileConfig.links.find((item) => item.name.toLowerCase() === "github");
+---
+
+<header class="lab-header sticky top-0 z-40 w-full">
+	<div class="lab-shell">
+		<div class="flex items-center justify-between py-3 sm:py-4">
+			<a href={url("/")} class="group flex items-center gap-2.5 font-bold tracking-tight" aria-label={siteConfig.title}>
+				<ImageWrapper src={profileConfig.avatar || ""} alt={`${profileConfig.name} logo`} class="site-brand-logo size-8 rounded-md border border-[var(--lab-border)] bg-[var(--lab-bg)] p-0.5" />
+				<span class="lab-logo-word">
+					<span>W</span><span class="lab-logo-brace">{}</span><span>X</span>
+				</span>
+			</a>
+
+			<nav class="hidden items-center gap-1 sm:flex" aria-label="Primary navigation">
+				{navLinks.map((item) => (
+					<a href={url(item.url)} class="lab-nav-link">{item.name}</a>
+				))}
+				{github && (
+					<a href={github.url} target="_blank" rel="noopener" class="lab-nav-link inline-flex items-center gap-1">
+						GitHub
+						<Icon name="fa6-solid:arrow-up-right-from-square" class="text-[0.65rem] opacity-45" />
+					</a>
+				)}
+				<div class="mx-1 h-4 w-px bg-[var(--lab-border)]" aria-hidden="true"></div>
+				<button class="lab-icon-btn" type="button" aria-label="Search" data-lab-search-open>
+					<Icon name="material-symbols:search-rounded" class="text-[1.1rem]" />
+				</button>
+				<button id="lab-theme-toggle" class="lab-icon-btn" type="button" aria-label="Toggle theme">
+					<Icon name="material-symbols:dark-mode-outline-rounded" class="lab-theme-moon text-[1.1rem]" />
+					<Icon name="material-symbols:wb-sunny-outline-rounded" class="lab-theme-sun text-[1.1rem]" />
+				</button>
+			</nav>
+
+			<div class="flex items-center gap-1 sm:hidden">
+				<button class="lab-icon-btn" type="button" aria-label="Search" data-lab-search-open>
+					<Icon name="material-symbols:search-rounded" class="text-[1.1rem]" />
+				</button>
+				<button id="lab-theme-toggle-mobile" class="lab-icon-btn" type="button" aria-label="Toggle theme">
+					<Icon name="material-symbols:dark-mode-outline-rounded" class="lab-theme-moon text-[1.1rem]" />
+					<Icon name="material-symbols:wb-sunny-outline-rounded" class="lab-theme-sun text-[1.1rem]" />
+				</button>
+				<button id="lab-menu-btn" class="lab-menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="lab-mobile-menu">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="lab-mobile-menu" class="lab-mobile-menu sm:hidden" aria-hidden="true">
+		<div class="lab-shell">
+			<div class="lab-mobile-menu-inner">
+				{navLinks.map((item) => (
+					<a href={url(item.url)} class="lab-mobile-link">
+						<span></span>
+						{item.name}
+					</a>
+				))}
+				{github && (
+					<a href={github.url} target="_blank" rel="noopener" class="lab-mobile-link">
+						<span></span>
+						GitHub
+					</a>
+				)}
+			</div>
+		</div>
+	</div>
+	<div class="h-px w-full bg-gradient-to-r from-transparent via-[var(--lab-border)] to-transparent"></div>
+</header>
+
+<style>
+	.lab-header {
+		background: color-mix(in srgb, var(--lab-bg) 74%, transparent);
+		backdrop-filter: blur(18px);
+		-webkit-backdrop-filter: blur(18px);
+	}
+	.site-brand-logo :global(img),
+	.site-brand-logo :global(svg) {
+		border-radius: 0.45rem;
+	}
+	.lab-logo-word {
+		display: inline-flex;
+		align-items: center;
+		color: var(--lab-fg);
+		font-size: 1.35rem;
+		line-height: 1;
+	}
+	.lab-logo-brace {
+		margin: 0 0.08rem;
+		color: var(--lab-accent);
+		font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+		font-size: 0.88rem;
+		transform: translateY(-0.03rem);
+	}
+	.lab-nav-link {
+		border-radius: 0.7rem;
+		color: color-mix(in srgb, var(--lab-fg) 78%, transparent);
+		font-size: 0.92rem;
+		font-weight: 650;
+		padding: 0.55rem 0.78rem;
+		transition: color 0.2s, background 0.2s, transform 0.2s;
+	}
+	.lab-nav-link:hover {
+		background: color-mix(in srgb, var(--lab-accent) 9%, transparent);
+		color: var(--lab-accent);
+		transform: translateY(-1px);
+	}
+	.lab-icon-btn,
+	.lab-menu-btn {
+		align-items: center;
+		border: 1px solid transparent;
+		border-radius: 0.7rem;
+		color: color-mix(in srgb, var(--lab-fg) 76%, transparent);
+		display: inline-flex;
+		height: 2.3rem;
+		justify-content: center;
+		position: relative;
+		transition: color 0.2s, background 0.2s, border-color 0.2s;
+		width: 2.3rem;
+	}
+	.lab-icon-btn:hover,
+	.lab-menu-btn:hover {
+		background: color-mix(in srgb, var(--lab-accent) 9%, transparent);
+		border-color: color-mix(in srgb, var(--lab-accent) 24%, transparent);
+		color: var(--lab-accent);
+	}
+	.lab-theme-sun {
+		display: none;
+	}
+	:global(html.dark) .lab-theme-moon {
+		display: none;
+	}
+	:global(html.dark) .lab-theme-sun {
+		display: block;
+	}
+	.lab-menu-btn {
+		flex-direction: column;
+		gap: 0.22rem;
+	}
+	.lab-menu-btn span {
+		background: currentColor;
+		border-radius: 999px;
+		display: block;
+		height: 2px;
+		transition: transform 0.2s, opacity 0.2s;
+		width: 1rem;
+	}
+	.lab-menu-btn[aria-expanded="true"] span:nth-child(1) {
+		transform: translateY(0.28rem) rotate(45deg);
+	}
+	.lab-menu-btn[aria-expanded="true"] span:nth-child(2) {
+		opacity: 0;
+	}
+	.lab-menu-btn[aria-expanded="true"] span:nth-child(3) {
+		transform: translateY(-0.28rem) rotate(-45deg);
+	}
+	.lab-mobile-menu {
+		display: none;
+		overflow: hidden;
+	}
+	.lab-mobile-menu.is-open {
+		display: block;
+	}
+	.lab-mobile-menu-inner {
+		background: color-mix(in srgb, var(--lab-card) 88%, transparent);
+		border: 1px solid var(--lab-border);
+		border-radius: 1rem;
+		display: grid;
+		gap: 0.25rem;
+		margin: 0.2rem 0 0.8rem;
+		min-height: 0;
+		overflow: hidden;
+		padding: 0.55rem;
+	}
+	.lab-mobile-link {
+		align-items: center;
+		border-radius: 0.8rem;
+		color: var(--lab-fg);
+		display: flex;
+		font-weight: 650;
+		gap: 0.65rem;
+		padding: 0.75rem 0.85rem;
+	}
+	.lab-mobile-link:hover {
+		background: color-mix(in srgb, var(--lab-accent) 9%, transparent);
+		color: var(--lab-accent);
+	}
+	.lab-mobile-link span {
+		background: var(--lab-accent);
+		border-radius: 999px;
+		height: 0.42rem;
+		width: 0.42rem;
+	}
+</style>
+
+<script>
+	function applyLabTheme(theme: string) {
+		if (theme === "light") {
+			document.documentElement.classList.remove("dark");
+		} else if (theme === "dark") {
+			document.documentElement.classList.add("dark");
+		} else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}
+
+	function initLabHeader() {
+		const menuBtn = document.getElementById("lab-menu-btn");
+		const mobileMenu = document.getElementById("lab-mobile-menu");
+		if (menuBtn && mobileMenu && menuBtn.dataset.inited !== "true") {
+			menuBtn.dataset.inited = "true";
+			menuBtn.addEventListener("click", () => {
+				const isOpen = menuBtn.getAttribute("aria-expanded") === "true";
+				menuBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+				mobileMenu.classList.toggle("is-open", !isOpen);
+				mobileMenu.setAttribute("aria-hidden", isOpen ? "true" : "false");
+			});
+			mobileMenu.querySelectorAll("a").forEach((link) => {
+				link.addEventListener("click", () => {
+					menuBtn.setAttribute("aria-expanded", "false");
+					mobileMenu.classList.remove("is-open");
+					mobileMenu.setAttribute("aria-hidden", "true");
+				});
+			});
+		}
+
+		const toggleTheme = () => {
+			const root = document.documentElement;
+			const next = root.classList.contains("dark") ? "light" : "dark";
+			localStorage.setItem("theme", next);
+			applyLabTheme(next);
+		};
+		for (const id of ["lab-theme-toggle", "lab-theme-toggle-mobile"]) {
+			const btn = document.getElementById(id);
+			if (btn && btn.dataset.inited !== "true") {
+				btn.dataset.inited = "true";
+				btn.addEventListener("click", toggleTheme);
+			}
+		}
+	}
+
+	initLabHeader();
+	document.addEventListener("swup:enable", () => {
+		(window as any).swup?.hooks?.on?.("page:view", initLabHeader);
+	});
+</script>
