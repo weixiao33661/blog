@@ -1,6 +1,6 @@
 ---
 title: "Allsafe 靶场练习 WriteUp"
-published: 2026-06-01
+published: 2025-11-02
 description: "Allsafe 靶场练习 WriteUp CTF WriteUp"
 image: '../../../assets/covers/cover-03.jpg'
 tags: [靶场, Android]
